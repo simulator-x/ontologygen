@@ -1,11 +1,11 @@
-package siris.core.ontology.generation
+package siris.components.ontology.generation
 
-import siris.core.ontology.Symbols
 import java.io.File
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.util.DefaultPrefixManager
 import org.semanticweb.owlapi.model._
 import collection.JavaConversions
+import org.slf4j.LoggerFactory
 
 /**
  * @author dwiebusch
@@ -16,12 +16,13 @@ import collection.JavaConversions
 object OntoGenTwo{
   def main( args : Array[String]){
     val p = new OntoGenTwo
-    p.load(new File("ontology/ontologyFiles/current/application/SiXtonsCurse/config/Config.owl"))
+    p.load(new File("/opt/local/etc/sirisOntology/application/SiXtonsCurse/config/Config.owl"))
     p.parse()
   }
 }
 
-class OntoGenTwo {
+class OntoGenTwo{
+  private val log = LoggerFactory.getLogger(getClass())
   //OWLPropertyNames
   private val hasConstructor = "hasConstructor"
   private val forComponent = "forComponent"
@@ -31,7 +32,7 @@ class OntoGenTwo {
   private val has_a = "has_a"
 
   //shortcuts
-  val nullName = Symbols.nullType.value.toString
+  val nullName = "nullType"
   val baseName = "Siris_Concept"
   val oSymbol = "OntologySymbol"
   val oMember = "SVarDescription"
@@ -79,7 +80,7 @@ class OntoGenTwo {
     if (ontologyIRI.isEmpty)
       throw OntologyException("tried to load ontology although iri was not set")
     //actually load the ontology
-    println("loading " + ontologyIRI.get)
+    log.info("loading " + ontologyIRI.get)
     setOntology(manager.loadOntologyFromOntologyDocument(ontologyIRI.get))
   }
 
@@ -89,7 +90,8 @@ class OntoGenTwo {
     else
       init()
     val members = collectMembers(baseClass.get)
-    members.foreach( m => println( m + "\n") )
+    members.foreach( m => log.info( m + "\n") )
+    println(members.mkString("\n"))
   }
 
   def collectMembers( c : OWLClass ) : Set[OntologyMember] =
@@ -158,9 +160,7 @@ class OntoGenTwo {
 
   def getSuperClasses( of : OWLClassExpression, recurse : Boolean = true ) : Set[OWLClassExpression] = {
     val direct = JavaConversions.asScalaSet(of.asOWLClass().getSuperClasses(manager.getOntologies)).toSet
-    if (!recurse)
-      return direct
-    direct ++ direct.flatMap( getSuperClasses(_, true) )
+    if (recurse) direct ++ direct.flatMap( getSuperClasses(_, true) ) else direct
   }
 
   def getTypes( i : OWLIndividual ) : Set[OWLClassExpression] =
@@ -169,15 +169,14 @@ class OntoGenTwo {
   def getIndividuals( c : OWLClass ) : Set[OWLIndividual] =
     JavaConversions.asScalaSet(c.getIndividuals(manager.getOntologies)).toSet
 
-  def getObjectProperties( individual : OWLIndividual )( prop : OWLObjectPropertyExpression ) : Set[OWLIndividual] = {
+  def getObjectProperties( individual : OWLIndividual )( prop : OWLObjectPropertyExpression ) =
     JavaConversions.asScalaSet(manager.getOntologies).foldLeft(Set[OWLIndividual]()){
       (set, onto) =>
         val subSet = individual.getObjectPropertyValues(onto).get(prop)
         if (subSet != null) set ++ JavaConversions.asScalaSet(subSet).toSet else set
     }
-  }
 
-  def getDataProperties( individual : OWLIndividual )( prop : OWLDataPropertyExpression ) : Set[OWLLiteral] =
+  def getDataProperties( individual : OWLIndividual )( prop : OWLDataPropertyExpression ) =
     JavaConversions.asScalaSet(manager.getOntologies).foldLeft(Set[OWLLiteral]()){
       (set, onto) =>
         val subset = individual.getDataPropertyValues(onto).get(prop)
@@ -194,110 +193,3 @@ class OntoGenTwo {
     getName(individual.asOWLNamedIndividual : OWLEntity)
 }
 
-
-object OntologyMember{
-  private var registry = Map[OWLIndividual, OntologyMember]()
-  def register( key : OWLIndividual, value : OntologyMember ) {
-    registry = registry.updated(key, value)
-  }
-
-  def apply( key : OWLIndividual) : Option[OntologyMember] =
-    registry.get(key)
-}
-
-class OntologyMember ( c : OWLClass, o : OntoGenTwo ){
-  getIndividuals.foreach( OntologyMember.register(_, this) )
-
-  def getName : String =
-    c.toStringID.replaceAll(".*#", "")
-
-  def getSymbolString : String =
-    "val " + deCap(getName) + " = OntologySymbol(Symbol(\"" + getName + "\"))"
-
-  def getEntityString : String =
-    if (isEntity) "class " + getName + "( e : Entity = new Entity() ) extends Entity(e)" else ""
-
-  def getSVarDescriptions : Map[String, String] =
-    getIndividuals.foldLeft(Map[String, String]()){
-      (m, i) => m.updated(getTargetComponent(i), if (isEntity) getEntitySVarDescription else getSVarDescription(i))
-    }
-
-  def getEntityDescription : String =
-    if (isEntity)
-      "case class " + getName + "EntityDescription( aspects : AspectBase* ) " +
-        "extends SpecificDescription(" + getName + "Description, aspects.toList" +
-        (if (getAnnotations(getIndividuals.head).nonEmpty) ", " + getAnnotations(getIndividuals.head).mkString(", ") else "" ) + ")"
-    else ""
-
-  protected def getIndividuals : Set[OWLIndividual] =
-    o.getIndividuals(c)
-
-  protected def getName( i : OWLIndividual ) : String =
-    i.toStringID.replaceAll(".*#", "")
-
-  protected def getName( entity : OWLEntity ) : String =
-    entity.toStringID.replaceAll(".*#", "")
-
-  protected def getEntitySVarDescription : String =
-    "object "+ getName +" extends EntitySVarDescription(Symbols."+deCap(getName)+
-      ", new " + getName + "(_) with Removability)"
-
-  protected def getSVarDescription( i : OWLIndividual ) : String = {
-    val base =  OntologyMember(getBase(i).get).collect{
-      case x => getTargetComponent(getBase(i).get) + ".types."+ x.getName
-    }.getOrElse("siris.ontology.types.NullType")
-    "object " + getName + " extends SVarDescription" + typeString(i) + "("+ base + " as Symbols." + getName +
-      getConstructor(i) + ")"
-  }
-
-  protected def typeString( i : OWLIndividual ) : String =
-    getDataType(i).collect{
-      case dt => "[" + getName(dt) + ", " + getName(getBaseDataType(i).getOrElse(dt)) + "]"
-    }.getOrElse("")
-
-  protected def getConstructor(i : OWLIndividual) : String =
-    o.getDataProperties(i)(o.getCtorProp).headOption.collect{
-      case literal => " createdBy " + literal.getLiteral
-    }.getOrElse("")
-
-  protected def getBaseDataType( i : OWLIndividual ) : Option[OWLIndividual] = {
-    getBase(i).collect{
-      case base if (base != i) => getDataType(base) match {
-        case None => getBaseDataType(base)
-        case data => data
-      }
-    }.getOrElse(None)
-  }
-
-  protected def getTargetComponent( i : OWLIndividual ) : String =
-    o.getObjectProperties(i)(o.getForComponentProp).headOption.collect{
-      case x => o.getDataProperties(x)(o.getInPackageProp).headOption.collect{
-        case literal => literal.getLiteral
-      }.getOrElse("")
-    }.getOrElse("")
-
-  protected def getAnnotations( i : OWLIndividual ) : Set[String] =
-    o.getObjectProperties(i)(o.getHasAProp).map{
-      x => OntologyMember(x).collect{ case something => something.getName }.getOrElse("")
-    }
-
-  protected def getBase( i : OWLIndividual ) : Option[OWLIndividual] =
-    o.getObjectProperties(i)(o.getBasedOnProp).headOption
-
-  protected def getDataType( i : OWLIndividual ) : Option[OWLIndividual] =
-    o.getObjectProperties(i)(o.getDataTypeProp).headOption
-
-  protected def isEntity : Boolean =
-    o.getSuperClasses(c).contains(o.getEntityClass)
-
-  protected def generatesSVar( i : OWLIndividual ) : Boolean =
-    getIndividuals.nonEmpty
-
-  protected def deCap( s : String ) : String =
-    if (s.length() < 2) s.toLowerCase else s.charAt(0).toLower + s.substring(1)
-
-  override def toString =
-    "OntologyMember " + getName + ":\n--------------------------------------------\n" +
-      "Symbol:\n\t" + getSymbolString + "\n" + "Descriptions:\n\t" + getSVarDescriptions.mkString("\n\t") +
-      (if (isEntity) "\nAssocEntity:\n\t" + getEntityString + "\nEntityDescription:\n\t" + getEntityDescription else "")
-}

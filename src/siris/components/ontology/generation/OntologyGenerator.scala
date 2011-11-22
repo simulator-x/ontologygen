@@ -1,10 +1,9 @@
-package siris.core.ontology.generation
+package siris.components.ontology.generation
 
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.util.DefaultPrefixManager
 import org.semanticweb.owlapi.model._
 import java.io.{BufferedWriter, FileWriter, File}
-import siris.core.ontology.Symbols
 import java.lang.Exception
 
 /* author: dwiebusch
@@ -31,7 +30,7 @@ class OntologyGenerator{
   private val has_a = "has_a"
 
   //shortcuts
-  private val nullName = Symbols.nullType.value.toString
+  private val nullName = "nullType"
   private val baseName = "Siris_Concept"
   private val oSymbol = "OntologySymbol"
   private val oMember = "SVarDescription"
