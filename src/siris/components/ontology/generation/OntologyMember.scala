@@ -3,11 +3,9 @@ package siris.components.ontology.generation
 import org.semanticweb.owlapi.model.{OWLEntity, OWLClass, OWLIndividual}
 
 /**
- * Created by IntelliJ IDEA.
  * User: dwiebusch
  * Date: 22.11.11
  * Time: 16:14
- * To change this template use File | Settings | File Templates.
  */
 
 
@@ -31,7 +29,7 @@ class OntologyMember ( c : OWLClass, o : OntoGenTwo ){
     "val " + deCap(getName) + " = OntologySymbol(Symbol(\"" + getName + "\"))"
 
   def getEntityString : String =
-    if (isEntity) "class " + getName + "( e : Entity = new Entity() ) extends Entity(e)" else ""
+    if (isEntity) "class " + getName + "( e : Entity = new Entity ) extends Entity(e) with Removability" else ""
 
   def getSVarDescriptions : Map[String, String] =
     getIndividuals.foldLeft(Map[String, String]()){
@@ -41,8 +39,12 @@ class OntologyMember ( c : OWLClass, o : OntoGenTwo ){
   def getEntityDescription : String =
     if (isEntity)
       "case class " + getName + "EntityDescription( aspects : AspectBase* ) " +
-        "extends SpecificDescription(" + getName + "Description, aspects.toList" +
-        (if (getAnnotations(getIndividuals.head).nonEmpty) ", " + getAnnotations(getIndividuals.head).mkString(", ") else "" ) + ")"
+        "extends SpecificDescription(" + getName + "Description, aspects.toList" + (
+        if (getAnnotations(getIndividuals.head).nonEmpty)
+          ", " + getAnnotations(getIndividuals.head).mkString(", ")
+        else
+          ""
+        ) + ")"
     else ""
 
   protected def getIndividuals : Set[OWLIndividual] =
@@ -56,7 +58,7 @@ class OntologyMember ( c : OWLClass, o : OntoGenTwo ){
 
   protected def getEntitySVarDescription : String =
     "object "+ getName +" extends EntitySVarDescription(Symbols."+deCap(getName)+
-      ", new " + getName + "(_) with Removability)"
+      ", new " + getName + "(_) )"
 
   protected def getSVarDescription( i : OWLIndividual ) : String = {
     val base =  OntologyMember(getBase(i).get).collect{
