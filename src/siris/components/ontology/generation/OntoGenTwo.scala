@@ -1,11 +1,11 @@
 package siris.components.ontology.generation
 
-import java.io.File
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.util.DefaultPrefixManager
 import org.semanticweb.owlapi.model._
-import collection.JavaConversions
+import collection.JavaConversions.asScalaSet
 import org.slf4j.LoggerFactory
+import java.io.{FileWriter, BufferedWriter, File}
 
 /**
  * @author dwiebusch
@@ -16,9 +16,18 @@ import org.slf4j.LoggerFactory
 object OntoGenTwo{
   def main( args : Array[String]){
     val p = new OntoGenTwo
-    p.load(new File("/opt/local/etc/sirisOntology/application/SiXtonsCurse/config/Config.owl"))
+    p.load(new File("/Users/dwiebusch/ontologies/NewCoreOntology/NewCoreOntology.owl"))
     p.parse()
   }
+
+  def getName( iri : IRI ) : String =
+    iri.toString.replaceAll(".*#", "")
+
+  def getName( entity : OWLEntity ) : String =
+    entity.toStringID.replaceAll(".*#", "")
+
+  def getName( individual : OWLIndividual ) : String =
+    getName(individual.asOWLNamedIndividual : OWLEntity)
 }
 
 class OntoGenTwo{
@@ -28,21 +37,44 @@ class OntoGenTwo{
   private val forComponent = "forComponent"
   private val hasDataType = "hasDataType"
   private val inPackage = "inPackage"
+  private val hasAspect = "hasAspect"
   private val basedOn = "basedOn"
-  private val has_a = "has_a"
+  private val has_a = "has"
 
   //shortcuts
   val nullName = "nullType"
-  val baseName = "Siris_Concept"
+  val baseName = "SVarDescription"
   val oSymbol = "OntologySymbol"
   val oMember = "SVarDescription"
 
+  private val outPkg        = ".types"
+  private val outFileNames  = "Types.scala"
+  private val symbolsObject = "Symbols2"
   //Files
-  private val ontPkg = "siris.ontology"
-  private val symbolsObject = "Symbols"
-  private val outFileNames = "Types_tmp.scala"
-  private val outPkg = ".types"
-  private val symbolsFile = "./"+ontPkg+"/src/siris/ontology/Symbols.scala"
+  private val corePath      = "../../../core/src/"
+  private val symbolsFile   = corePath + "siris/core/ontology/"+symbolsObject+".scala"
+  private val entitiesFile  = corePath + "siris/core/ontology/entities/Entities.scala"
+  private val eDescsFile    = corePath + "siris/core/ontology/entities/EntityDescriptions.scala"
+
+  private val symbolsHeader = "package siris.core.ontology\n\n" +
+    "import siris.core.entity.description.Semantics\n" +
+    "import siris.core.ontology.types.OntologySymbol\n\n" +
+    "object "+symbolsObject+"{\n" +
+    "  private implicit def symToSem( s : Symbol ) =  new Semantics {\n" +
+    "    def toSymbol = s\n" +
+    "  }\n\n\t"
+
+  private val entitiesHeader = "package siris.core.ontology.entities\n\n" +
+    "import siris.core.entity.component.Removability\n" +
+    "import siris.core.entity.Entity\n\n"
+
+  private val descriptionHeader = "package siris.core.ontology.entities\n\n" +
+    "import siris.core.entity.description.AspectBase\n" +
+    "import siris.core.ontology.SpecificDescription\n\n"
+
+  private val typesHeader = "import siris.core.ontology.{"+symbolsObject+" => Symbols, SVarDescription}\n" +
+    "import siris.core.ontology.EntitySVarDescription\n" +
+    "import siris.core.ontology.entities._\n\n"
 
   private def filenameFromPackage( pkgName : String) = {
     val dir = "." + File.separator + pkgName + File.separator + "src" + File.separator +
@@ -89,14 +121,51 @@ class OntoGenTwo{
       throw OntologyException("No ontology was loaded, so nothing could be parsed")
     else
       init()
-    val members = collectMembers(baseClass.get)
-    members.foreach( m => log.info( m + "\n") )
-    println(members.mkString("\n"))
+
+    val members           = collectMembers(baseClass.get)
+    var symbolsList       = List[String]()
+    var svarDescLists     = Map[String, List[String]]()
+    var entityStringList  = List[String]()
+    var entityDescList    = List[String]()
+
+    members.foreach{ m =>
+      log.info( m + "\n" )
+
+      symbolsList = m.getSymbolString :: symbolsList
+      m.getSVarDescriptions.foreach{ desc =>
+        svarDescLists = svarDescLists.updated(desc._1, desc._2 :: svarDescLists.getOrElse(desc._1, Nil))
+      }
+      if (m.isEntity){
+        entityStringList = m.getEntityString :: entityStringList
+        entityDescList = m.getEntityDescription :: entityDescList
+      }
+    }
+
+    write(symbolsFile,  symbolsHeader + interleave(symbolsList.sorted,        4 ).mkString("\n\t") + "\n}")
+    write(entitiesFile, entitiesHeader + interleave(entityStringList.sorted,  6 ).mkString("\n"))
+    write(eDescsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
+    svarDescLists.foreach{ t => write(
+        corePath + t._1.replaceAll("\\.", "/")+"/types/Types.scala",
+        "package " + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n")
+    ) }
   }
 
-  def collectMembers( c : OWLClass ) : Set[OntologyMember] =
-    JavaConversions.asScalaSet(c.getSubClasses(manager.getOntologies)).flatMap{
-      c => collectMembers(c.asOWLClass) }.toSet + new OntologyMember(c, this)
+  protected def interleave(in : List[String], p : Int) : List[String] = in match {
+    case head :: neck :: tail =>
+      head :: (if (head.charAt(p) == neck.charAt(p)) interleave(neck :: tail, p) else "" :: interleave(neck :: tail, p))
+    case list => list
+  }
+
+  protected def write(filename : String, toWrite : String){
+    val writer = new BufferedWriter(new FileWriter(new File(filename)))
+    writer.write(toWrite)
+    writer.close()
+  }
+
+  protected def collectMembers( c : OWLClass, prev : Set[OntologyMember] = Set() ) : Set[OntologyMember] =
+    prev ++ asScalaSet(c.getSubClasses(manager.getOntologies)).flatMap{
+      c => collectMembers(c.asOWLClass, Set(new OntologyMember(c.asOWLClass(), this)))
+    }
 
   private var baseClass : Option[OWLClass] = None
   private var entityClass : Option[OWLClass] = None
@@ -105,28 +174,30 @@ class OntoGenTwo{
   private var inPackageProp : Option[OWLDataProperty] = None
   private var hasAObjectProp : Option[OWLObjectProperty] = None
   private var baseObjectProp : Option[OWLObjectProperty] = None
-  private var forCompDataProp : Option[OWLObjectProperty] = None
+  private var forCompObjectProp : Option[OWLObjectProperty] = None
   private var dataTypeObjectProp : Option[OWLObjectProperty] = None
+  private var hasAspectObjectProp : Option[OWLObjectProperty] = None
 
 
   private def init() {
-    val dataProps = JavaConversions.asScalaSet(manager.getOntologies).foldLeft(Set[OWLDataProperty]()){
-      (set, onto) => set ++ JavaConversions.asScalaSet(onto.getDataPropertiesInSignature).toSet
+    val dataProps = asScalaSet(manager.getOntologies).foldLeft(Set[OWLDataProperty]()){
+      (set, onto) => set ++ asScalaSet(onto.getDataPropertiesInSignature).toSet
     }
-    val objectProps = JavaConversions.asScalaSet(manager.getOntologies).foldLeft(Set[OWLObjectProperty]()){
-      (set, onto) => set ++ JavaConversions.asScalaSet(onto.getObjectPropertiesInSignature).toSet
+    val objectProps = asScalaSet(manager.getOntologies).foldLeft(Set[OWLObjectProperty]()){
+      (set, onto) => set ++ asScalaSet(onto.getObjectPropertiesInSignature).toSet
     }
     nullType            = getClass(nullName).collect{
       case c => c.getIndividuals(manager.getOntologies).iterator().next()
     }
     entityClass         = getClass("Entity")
     baseClass           = getClass(baseName)
-    hasAObjectProp      = objectProps.find( getName(_) equals has_a )
-    baseObjectProp      = objectProps.find( getName(_) equals basedOn )
-    dataTypeObjectProp  = objectProps.find( getName(_) equals hasDataType )
-    forCompDataProp     = objectProps.find( getName(_) equals forComponent )
-    inPackageProp       = dataProps.find( getName(_) equals inPackage )
-    ctorProp            = dataProps.find( getName(_) equals hasConstructor )
+    hasAObjectProp      = objectProps.find( OntoGenTwo.getName(_) equals has_a )
+    baseObjectProp      = objectProps.find( OntoGenTwo.getName(_) equals basedOn )
+    hasAspectObjectProp = objectProps.find( OntoGenTwo.getName(_) equals hasAspect )
+    dataTypeObjectProp  = objectProps.find( OntoGenTwo.getName(_) equals hasDataType )
+    forCompObjectProp   = objectProps.find( OntoGenTwo.getName(_) equals forComponent )
+    inPackageProp       = dataProps.find( OntoGenTwo.getName(_) equals inPackage )
+    ctorProp            = dataProps.find( OntoGenTwo.getName(_) equals hasConstructor )
   }
 
   protected def getClass( name : String ) : Option[OWLClass] = ontology match {
@@ -137,7 +208,7 @@ class OntoGenTwo{
   def getNullTypeClass : OWLIndividual =
     nullType.get
 
-  def getEntityClass : OWLClassExpression =
+  def getEntityClass : OWLClass =
     entityClass.get
 
   def getBasedOnProp : OWLObjectPropertyExpression =
@@ -150,7 +221,7 @@ class OntoGenTwo{
     inPackageProp.get
 
   def getForComponentProp : OWLObjectPropertyExpression =
-    forCompDataProp.get
+    forCompObjectProp.get
 
   def getHasAProp : OWLObjectPropertyExpression =
     hasAObjectProp.get
@@ -158,38 +229,43 @@ class OntoGenTwo{
   def getCtorProp : OWLDataPropertyExpression =
     ctorProp.get
 
-  def getSuperClasses( of : OWLClassExpression, recurse : Boolean = true ) : Set[OWLClassExpression] = {
-    val direct = JavaConversions.asScalaSet(of.asOWLClass().getSuperClasses(manager.getOntologies)).toSet
-    if (recurse) direct ++ direct.flatMap( getSuperClasses(_, true) ) else direct
+  def getHasAspectObjectProp : OWLObjectProperty =
+    hasAspectObjectProp.get
+
+  def getSuperClasses( of : OWLClass, recurse : Boolean = true ) : Set[OWLClassExpression] = {
+    val direct = asScalaSet(of.getSuperClasses(manager.getOntologies)).toSet
+    if (recurse)
+      direct ++ direct.flatMap( x => if (x.isAnonymous) Set(x) else getSuperClasses(x.asOWLClass(), true) )
+    else
+      direct
   }
 
+  def getAnonymousSuperClasses(of : OWLClass, recurse : Boolean = true) : Set[OWLClassExpression] =
+    getSuperClasses(of, recurse).filter(_.isAnonymous)
+
+  def getNamedSuperClasses(of : OWLClass, recurse : Boolean = true) : Set[OWLClassExpression] =
+    getSuperClasses(of, recurse).filterNot(_.isAnonymous)
+
   def getTypes( i : OWLIndividual ) : Set[OWLClassExpression] =
-    JavaConversions.asScalaSet(i.getTypes(manager.getOntologies)).toSet
+    asScalaSet(i.getTypes(manager.getOntologies)).toSet
 
   def getIndividuals( c : OWLClass ) : Set[OWLIndividual] =
-    JavaConversions.asScalaSet(c.getIndividuals(manager.getOntologies)).toSet
+    asScalaSet(c.getIndividuals(manager.getOntologies)).toSet
 
   def getObjectProperties( individual : OWLIndividual )( prop : OWLObjectPropertyExpression ) =
-    JavaConversions.asScalaSet(manager.getOntologies).foldLeft(Set[OWLIndividual]()){
+    asScalaSet(manager.getOntologies).foldLeft(Set[OWLIndividual]()){
       (set, onto) =>
         val subSet = individual.getObjectPropertyValues(onto).get(prop)
-        if (subSet != null) set ++ JavaConversions.asScalaSet(subSet).toSet else set
+        if (subSet != null) set ++ asScalaSet(subSet).toSet else set
     }
 
   def getDataProperties( individual : OWLIndividual )( prop : OWLDataPropertyExpression ) =
-    JavaConversions.asScalaSet(manager.getOntologies).foldLeft(Set[OWLLiteral]()){
+    asScalaSet(manager.getOntologies).foldLeft(Set[OWLLiteral]()){
       (set, onto) =>
         val subset = individual.getDataPropertyValues(onto).get(prop)
-        if (subset != null) set ++ JavaConversions.asScalaSet(subset).toSet else set
+        if (subset != null) set ++ asScalaSet(subset).toSet else set
     }
 
-  protected def getName( iri : IRI ) : String =
-    iri.toString.replaceAll(".*#", "")
 
-  protected def getName( entity : OWLEntity ) : String =
-    entity.toStringID.replaceAll(".*#", "")
-
-  protected def getName( individual : OWLIndividual ) : String =
-    getName(individual.asOWLNamedIndividual : OWLEntity)
 }
 

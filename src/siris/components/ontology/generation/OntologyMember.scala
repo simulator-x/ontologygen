@@ -1,6 +1,8 @@
 package siris.components.ontology.generation
 
-import org.semanticweb.owlapi.model.{OWLEntity, OWLClass, OWLIndividual}
+import org.semanticweb.owlapi.model._
+import scala.collection.JavaConversions.asScalaSet
+
 
 /**
  * User: dwiebusch
@@ -15,15 +17,18 @@ object OntologyMember{
     registry = registry.updated(key, value)
   }
 
+  def apply( key : OWLClass ) : Option[OntologyMember] =
+    registry.find(_._2.owlClass equals key).collect{ case pair => pair._2 }
+
   def apply( key : OWLIndividual) : Option[OntologyMember] =
     registry.get(key)
 }
 
-class OntologyMember ( c : OWLClass, o : OntoGenTwo ){
+class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
   getIndividuals.foreach( OntologyMember.register(_, this) )
 
   def getName : String =
-    c.toStringID.replaceAll(".*#", "")
+    owlClass.toStringID.replaceAll(".*#", "")
 
   def getSymbolString : String =
     "val " + deCap(getName) + " = OntologySymbol(Symbol(\"" + getName + "\"))"
@@ -31,24 +36,56 @@ class OntologyMember ( c : OWLClass, o : OntoGenTwo ){
   def getEntityString : String =
     if (isEntity) "class " + getName + "( e : Entity = new Entity ) extends Entity(e) with Removability" else ""
 
-  def getSVarDescriptions : Map[String, String] =
-    getIndividuals.foldLeft(Map[String, String]()){
+  def getSVarDescriptions : Map[String, String] = {
+    val initialMap =
+      if (isEntity)
+        Map[String, String]("siris.core.ontology.entities" -> getEntitySVarDescription)
+      else
+        Map[String, String]()
+    getIndividuals.foldLeft(initialMap){
       (m, i) => m.updated(getTargetComponent(i), if (isEntity) getEntitySVarDescription else getSVarDescription(i))
     }
+  }
 
   def getEntityDescription : String =
     if (isEntity)
       "case class " + getName + "EntityDescription( aspects : AspectBase* ) " +
-        "extends SpecificDescription(" + getName + "Description, aspects.toList" + (
-        if (getAnnotations(getIndividuals.head).nonEmpty)
-          ", " + getAnnotations(getIndividuals.head).mkString(", ")
-        else
-          ""
-        ) + ")"
+        "extends SpecificDescription(types." + getName + ", aspects.toList" +
+        getDescriptionStub.collect{ case stub => ", " + stub.getFeatureString }.getOrElse("") +
+        ")"
     else ""
 
+  private def getDescriptionStub : Option[DescriptionStub] =
+    o.getAnonymousSuperClasses(owlClass).map( handleAnonymousSuperClass(_)).foldLeft(None : Option[DescriptionStub]){
+      (a, b) => b.merge(a.getOrElse(DescriptionStub()))
+    }
+
+  def getFullName : String =
+    "siris.core.ontology.types." + getName
+
+  private def createStub(prop : OWLObjectPropertyExpression, value : OWLClass, in : DescriptionStub) =
+    if (prop equals o.getHasAProp)
+      DescriptionStub(value :: in.has, in.hasAspect, in.oneOf)
+    else if (prop equals o.getHasAspectObjectProp)
+      DescriptionStub(in.has, value :: in.hasAspect, in.oneOf)
+    else
+      in
+
+  protected def handleAnonymousSuperClass( c : OWLClassExpression ) : DescriptionStub = c match {
+    case cardinality : OWLObjectExactCardinality =>
+      createStub(cardinality.getProperty, cardinality.getFiller.asOWLClass(), DescriptionStub())
+    case someValuesFrom : OWLObjectSomeValuesFrom =>
+      createStub(someValuesFrom.getProperty, someValuesFrom.getFiller.asOWLClass(), DescriptionStub())
+    case unionOf : OWLObjectUnionOf =>
+      val union = unionOf.getOperands.map(handleAnonymousSuperClass(_))
+      DescriptionStub(Nil, Nil, if (union.nonEmpty && !union.head.isEmpty) union.toList else Nil)
+    case expr =>
+      println("unexpected type: " + expr)
+      DescriptionStub()
+  }
+
   protected def getIndividuals : Set[OWLIndividual] =
-    o.getIndividuals(c)
+    o.getIndividuals(owlClass)
 
   protected def getName( i : OWLIndividual ) : String =
     i.toStringID.replaceAll(".*#", "")
@@ -57,14 +94,16 @@ class OntologyMember ( c : OWLClass, o : OntoGenTwo ){
     entity.toStringID.replaceAll(".*#", "")
 
   protected def getEntitySVarDescription : String =
-    "object "+ getName +" extends EntitySVarDescription(Symbols."+deCap(getName)+
-      ", new " + getName + "(_) )"
+    "object "+ getName +" extends EntitySVarDescription(Symbols."+deCap(getName) + ", new " + getName + "(_) )"
 
   protected def getSVarDescription( i : OWLIndividual ) : String = {
-    val base =  OntologyMember(getBase(i).get).collect{
-      case x => getTargetComponent(getBase(i).get) + ".types."+ x.getName
-    }.getOrElse("siris.ontology.types.NullType")
-    "object " + getName + " extends SVarDescription" + typeString(i) + "("+ base + " as Symbols." + getName +
+    val base = getBase(i) match {
+      case Some(b) if (OntologyMember(b).isDefined) =>
+        getTargetComponent(getBase(i).get) + ".types."+ OntologyMember(b).get.getName
+      case _ =>
+        "siris.core.ontology.types.NullType"
+    }
+    "object " + getName + " extends SVarDescription" + typeString(i) + "("+ base + " as Symbols." + deCap(getName) +
       getConstructor(i) + ")"
   }
 
@@ -105,8 +144,8 @@ class OntologyMember ( c : OWLClass, o : OntoGenTwo ){
   protected def getDataType( i : OWLIndividual ) : Option[OWLIndividual] =
     o.getObjectProperties(i)(o.getDataTypeProp).headOption
 
-  protected def isEntity : Boolean =
-    o.getSuperClasses(c).contains(o.getEntityClass)
+  def isEntity : Boolean =
+    o.getSuperClasses(owlClass).contains(o.getEntityClass)
 
   protected def generatesSVar( i : OWLIndividual ) : Boolean =
     getIndividuals.nonEmpty
