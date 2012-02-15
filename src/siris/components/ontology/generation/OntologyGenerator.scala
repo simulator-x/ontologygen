@@ -116,7 +116,7 @@ class OntologyGenerator{
     val str1 = "case class " + p.name + "EntityDescription( aspects : AspectBase* ) extends SpecificDescription" +
       "(types." + p.name + ", aspects.toList"
     val str2 = "object " + p.name + " extends EntitySVarDescription(Symbols." + deCap(p.name) +
-      ", new " + p.name + "(_) with Removability)"
+      ", new " + p.name + "(_) )"
     val str3 = "class " + p.name + "( e : Entity = new Entity() ) extends Entity(e)"
 
     var str4 = p.entries.map( i => getObjectProperty(i)(has_a)).flatMap( s => s.map(getName(_)) ).mkString(", ")

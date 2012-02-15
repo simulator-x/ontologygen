@@ -34,7 +34,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     "val " + deCap(getName) + " = OntologySymbol(Symbol(\"" + getName + "\"))"
 
   def getEntityString : String =
-    if (isEntity) "class " + getName + "( e : Entity = new Entity ) extends Entity(e) with Removability" else ""
+    if (isEntity) "class " + getName + "( e : Entity = new Entity ) extends Entity(e) " else ""
 
   def getSVarDescriptions : Map[String, String] = {
     val initialMap =
