@@ -31,7 +31,7 @@ object OntoGenTwo{
 }
 
 class OntoGenTwo{
-  private val log = LoggerFactory.getLogger(getClass())
+  private val log = LoggerFactory.getLogger(getClass)
   //OWLPropertyNames
   private val hasConstructor = "hasConstructor"
   private val forComponent = "forComponent"
@@ -235,7 +235,7 @@ class OntoGenTwo{
   def getSuperClasses( of : OWLClass, recurse : Boolean = true ) : Set[OWLClassExpression] = {
     val direct = asScalaSet(of.getSuperClasses(manager.getOntologies)).toSet
     if (recurse)
-      direct ++ direct.flatMap( x => if (x.isAnonymous) Set(x) else getSuperClasses(x.asOWLClass(), true) )
+      direct ++ direct.flatMap( x => if (x.isAnonymous) Set(x) else getSuperClasses(x.asOWLClass(), recurse = true) )
     else
       direct
   }
