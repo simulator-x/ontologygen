@@ -1,4 +1,4 @@
-package siris.components.ontology.generation
+package simx.components.ontology.generation
 
 import org.semanticweb.owlapi.model._
 import scala.collection.JavaConversions.asScalaSet
@@ -39,7 +39,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
   def getSVarDescriptions : Map[String, String] = {
     val initialMap =
       if (isEntity)
-        Map[String, String]("siris.core.ontology.entities" -> getEntitySVarDescription)
+        Map[String, String]("simx.core.ontology.entities" -> getEntitySVarDescription)
       else
         Map[String, String]()
     getIndividuals.foldLeft(initialMap){
@@ -61,7 +61,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     }
 
   def getFullName : String =
-    "siris.core.ontology.types." + getName
+    "simx.core.ontology.types." + getName
 
   private def createStub(prop : OWLObjectPropertyExpression, value : OWLClass, in : DescriptionStub) =
     if (prop equals o.getHasAProp)
@@ -101,7 +101,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
       case Some(b) if (OntologyMember(b).isDefined) =>
         getTargetComponent(getBase(i).get) + ".types."+ OntologyMember(b).get.getName
       case _ =>
-        "siris.core.ontology.types.NullType"
+        "simx.core.ontology.types.NullType"
     }
     "object " + getName + " extends SVarDescription" + typeString(i) + "("+ base + " as Symbols." + deCap(getName) +
       getConstructor(i) + ")"

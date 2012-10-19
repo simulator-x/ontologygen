@@ -1,4 +1,4 @@
-package siris.components.ontology.generation
+package simx.components.ontology.generation
 
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.util.DefaultPrefixManager
@@ -13,7 +13,7 @@ import java.lang.Exception
 object OntologyGenerator{
   def main(args : Array[String]) {
     val p = new OntologyGenerator
-    p.load(new File("siris.core.ontology/ontologyFiles/current/application/SiXtonsCurse/config/Config.owl"))
+    p.load(new File("simx.core.ontology/ontologyFiles/current/application/SiXtonsCurse/config/Config.owl"))
     p.parse()
   }
 }
@@ -36,11 +36,11 @@ class OntologyGenerator{
   private val oMember = "SVarDescription"
 
   //Files
-  private val ontPkg = "siris.ontology"
+  private val ontPkg = "simx.ontology"
   private val symbolsObject = "Symbols"
   private val outFileNames = "Types.scala"
   private val outPkg = ".types"
-  private val symbolsFile = "./"+ontPkg+"/src/siris/core/ontology/Symbols.scala"
+  private val symbolsFile = "./"+ontPkg+"/src/simx/core/ontology/Symbols.scala"
 
   private def filenameFromPackage( pkgName : String) = {
     val dir = "." + File.separator + pkgName + File.separator + "src" + File.separator +
@@ -250,8 +250,8 @@ class OntologyGenerator{
     x => x.children.foldLeft(Set(x.name)){ _ ++ collectSymbolNames(_) }
 
   private def generateSemanticSymbolsFile( semanticSymbols : ParseTree ) : String =
-    "package "+ ontPkg +"\n\nimport siris.core.entity.description.Semantics\n" +
-      "import siris.ontology.types.OntologySymbol\n\nobject "+ symbolsObject + "{\n  " +
+    "package "+ ontPkg +"\n\nimport simx.core.entity.description.Semantics\n" +
+      "import simx.ontology.types.OntologySymbol\n\nobject "+ symbolsObject + "{\n  " +
       "private implicit def symToSem( s : Symbol ) =  new Semantics {\n    def toSymbol = s\n  }" +
       interleave(collectSymbolNames(semanticSymbols).toList,
         sym => "  val " + deCap(sym) + " = " + oSymbol + "(Symbol(\"" + deCap(sym) + "\"))") +

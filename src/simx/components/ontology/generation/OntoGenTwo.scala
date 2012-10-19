@@ -1,4 +1,4 @@
-package siris.components.ontology.generation
+package simx.components.ontology.generation
 
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.util.DefaultPrefixManager
@@ -52,29 +52,29 @@ class OntoGenTwo{
   private val symbolsObject = "Symbols2"
   //Files
   private val corePath      = "../../../core/src/"
-  private val symbolsFile   = corePath + "siris/core/ontology/"+symbolsObject+".scala"
-  private val entitiesFile  = corePath + "siris/core/ontology/entities/Entities.scala"
-  private val eDescsFile    = corePath + "siris/core/ontology/entities/EntityDescriptions.scala"
+  private val symbolsFile   = corePath + "simx/core/ontology/" +symbolsObject+".scala"
+  private val entitiesFile  = corePath + "simx/core/ontology/entities/Entities.scala"
+  private val eDescsFile    = corePath + "simx/core/ontology/entities/EntityDescriptions.scala"
 
-  private val symbolsHeader = "package siris.core.ontology\n\n" +
-    "import siris.core.entity.description.Semantics\n" +
-    "import siris.core.ontology.types.OntologySymbol\n\n" +
+  private val symbolsHeader = "package simx.core.ontology\n\n" +
+    "import simx.core.entity.description.Semantics\n" +
+    "import simx.core.ontology.types.OntologySymbol\n\n" +
     "object "+symbolsObject+"{\n" +
     "  private implicit def symToSem( s : Symbol ) =  new Semantics {\n" +
     "    def toSymbol = s\n" +
     "  }\n\n\t"
 
-  private val entitiesHeader = "package siris.core.ontology.entities\n\n" +
-    "import siris.core.entity.component.Removability\n" +
-    "import siris.core.entity.Entity\n\n"
+  private val entitiesHeader = "package simx.core.ontology.entities\n\n" +
+    "import simx.core.entity.component.Removability\n" +
+    "import simx.core.entity.Entity\n\n"
 
-  private val descriptionHeader = "package siris.core.ontology.entities\n\n" +
-    "import siris.core.entity.description.AspectBase\n" +
-    "import siris.core.ontology.SpecificDescription\n\n"
+  private val descriptionHeader = "package simx.core.ontology.entities\n\n" +
+    "import simx.core.entity.description.AspectBase\n" +
+    "import simx.core.ontology.SpecificDescription\n\n"
 
-  private val typesHeader = "import siris.core.ontology.{"+symbolsObject+" => Symbols, SVarDescription}\n" +
-    "import siris.core.ontology.EntitySVarDescription\n" +
-    "import siris.core.ontology.entities._\n\n"
+  private val typesHeader = "import simx.core.ontology.{"+symbolsObject+" => Symbols, SVarDescription}\n" +
+    "import simx.core.ontology.EntitySVarDescription\n" +
+    "import simx.core.ontology.entities._\n\n"
 
   private def filenameFromPackage( pkgName : String) = {
     val dir = "." + File.separator + pkgName + File.separator + "src" + File.separator +

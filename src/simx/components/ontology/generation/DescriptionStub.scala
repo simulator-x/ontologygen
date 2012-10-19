@@ -1,4 +1,4 @@
-package siris.components.ontology.generation
+package simx.components.ontology.generation
 
 import org.semanticweb.owlapi.model.OWLClass
 import collection.mutable.HashMap
