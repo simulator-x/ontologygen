@@ -18,7 +18,7 @@ case class OntologyException(reason : String) extends Exception(reason)
 object OntoGenTwo{
   def main( args : Array[String]){
     val p = new OntoGenTwo
-    p.load(new File("/Users/dwiebusch/ontologies/NewCoreOntology/NewCoreOntology.owl"))
+    p.load(new File("NewCoreOntology.owl"))
     p.parse()
   }
 
