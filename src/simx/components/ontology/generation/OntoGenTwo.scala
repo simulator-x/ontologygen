@@ -13,6 +13,8 @@ import java.io.{FileWriter, BufferedWriter, File}
  * Time: 18:11
  */
 
+case class OntologyException(reason : String) extends Exception(reason)
+
 object OntoGenTwo{
   def main( args : Array[String]){
     val p = new OntoGenTwo
@@ -31,7 +33,7 @@ object OntoGenTwo{
 }
 
 class OntoGenTwo{
-  private val log = LoggerFactory.getLogger(getClass)
+  private val log = LoggerFactory.getLogger(this.asInstanceOf[Object].getClass)
   //OWLPropertyNames
   private val hasConstructor = "hasConstructor"
   private val forComponent = "forComponent"
@@ -47,16 +49,18 @@ class OntoGenTwo{
   val oSymbol = "OntologySymbol"
   val oMember = "SVarDescription"
 
-  private val outPkg        = ".types"
+  private val outPkg        = ".ontology.types"
   private val outFileNames  = "Types.scala"
-  private val symbolsObject = "Symbols2"
+  private val symbolsObject = "Symbols"
   //Files
-  private val corePath      = "../../../core/src/"
+  private val corePath      = "src/out/core/src/"
   private val symbolsFile   = corePath + "simx/core/ontology/" +symbolsObject+".scala"
   private val entitiesFile  = corePath + "simx/core/ontology/entities/Entities.scala"
   private val eDescsFile    = corePath + "simx/core/ontology/entities/EntityDescriptions.scala"
 
-  private val symbolsHeader = "package simx.core.ontology\n\n" +
+  private val prePackage = "out.core.src."
+
+  private val symbolsHeader = "package " + prePackage + "simx.core.ontology\n\n" +
     "import simx.core.entity.description.Semantics\n" +
     "import simx.core.ontology.types.OntologySymbol\n\n" +
     "object "+symbolsObject+"{\n" +
@@ -64,17 +68,18 @@ class OntoGenTwo{
     "    def toSymbol = s\n" +
     "  }\n\n\t"
 
-  private val entitiesHeader = "package simx.core.ontology.entities\n\n" +
-    "import simx.core.entity.component.Removability\n" +
+  private val entitiesHeader = "package " + prePackage + "simx.core.ontology.entities\n\n" +
     "import simx.core.entity.Entity\n\n"
 
-  private val descriptionHeader = "package simx.core.ontology.entities\n\n" +
-    "import simx.core.entity.description.AspectBase\n" +
+  private val descriptionHeader = "package " + prePackage + "simx.core.ontology.entities\n\n" +
+    "import " + prePackage + "simx.core.ontology\n" +
+    "import simx.core.entity.description.EntityAspect\n" +
     "import simx.core.ontology.SpecificDescription\n\n"
 
-  private val typesHeader = "import simx.core.ontology.{"+symbolsObject+" => Symbols, SVarDescription}\n" +
+  private val typesHeader = "import simx.core.ontology.SVarDescription\n" +
     "import simx.core.ontology.EntitySVarDescription\n" +
-    "import simx.core.ontology.entities._\n\n"
+    "import " + prePackage + "simx.core.ontology.entities._\n" +
+    "import " + prePackage + "simx.core.ontology.Symbols\n\n"
 
   private def filenameFromPackage( pkgName : String) = {
     val dir = "." + File.separator + pkgName + File.separator + "src" + File.separator +
@@ -144,9 +149,11 @@ class OntoGenTwo{
     write(symbolsFile,  symbolsHeader + interleave(symbolsList.sorted,        4 ).mkString("\n\t") + "\n}")
     write(entitiesFile, entitiesHeader + interleave(entityStringList.sorted,  6 ).mkString("\n"))
     write(eDescsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
-    svarDescLists.foreach{ t => write(
+    svarDescLists.foreach{ t =>
+      println(t._1)
+      write(
         corePath + t._1.replaceAll("\\.", "/")+"/types/Types.scala",
-        "package " + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n")
+        "package " + prePackage + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n")
     ) }
   }
 

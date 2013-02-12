@@ -39,18 +39,18 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
   def getSVarDescriptions : Map[String, String] = {
     val initialMap =
       if (isEntity)
-        Map[String, String]("simx.core.ontology.entities" -> getEntitySVarDescription)
+        Map[String, String]("simx.core.ontology" -> getEntitySVarDescription)
       else
         Map[String, String]()
     getIndividuals.foldLeft(initialMap){
-      (m, i) => m.updated(getTargetComponent(i), if (isEntity) getEntitySVarDescription else getSVarDescription(i))
+      (m, i) => m.updated(getTargetComponent(i) + ".ontology", if (isEntity) getEntitySVarDescription else getSVarDescription(i))
     }
   }
 
   def getEntityDescription : String =
     if (isEntity)
-      "case class " + getName + "EntityDescription( aspects : AspectBase* ) " +
-        "extends SpecificDescription(types." + getName + ", aspects.toList" +
+      "case class " + getName + "EntityDescription( asps : EntityAspect* ) " +
+        "extends SpecificDescription(ontology.types." + getName + ", asps.toList" +
         getDescriptionStub.collect{ case stub => ", " + stub.getFeatureString }.getOrElse("") +
         ")"
     else ""
@@ -99,7 +99,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
   protected def getSVarDescription( i : OWLIndividual ) : String = {
     val base = getBase(i) match {
       case Some(b) if (OntologyMember(b).isDefined) =>
-        getTargetComponent(getBase(i).get) + ".types."+ OntologyMember(b).get.getName
+        getTargetComponent(getBase(i).get) + ".ontology.types."+ OntologyMember(b).get.getName
       case _ =>
         "simx.core.ontology.types.NullType"
     }
