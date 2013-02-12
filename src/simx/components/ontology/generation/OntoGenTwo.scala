@@ -54,13 +54,13 @@ class OntoGenTwo{
   private val symbolsObject = "Symbols"
   //Files
   private val corePath      = "src/out/core/src/"
-  private val symbolsFile   = corePath + "simx/core/ontology/" +symbolsObject+".scala"
+  private val symbolsFile   = "../../../core/src/" + "simx/core/ontology/" +symbolsObject+".scala"
   private val entitiesFile  = corePath + "simx/core/ontology/entities/Entities.scala"
   private val eDescsFile    = corePath + "simx/core/ontology/entities/EntityDescriptions.scala"
 
   private val prePackage = "out.core.src."
 
-  private val symbolsHeader = "package " + prePackage + "simx.core.ontology\n\n" +
+  private val symbolsHeader = "package simx.core.ontology\n\n" +
     "import simx.core.entity.description.Semantics\n" +
     "import simx.core.ontology.types.OntologySymbol\n\n" +
     "object "+symbolsObject+"{\n" +
@@ -149,9 +149,7 @@ class OntoGenTwo{
     write(symbolsFile,  symbolsHeader + interleave(symbolsList.sorted,        4 ).mkString("\n\t") + "\n}")
     write(entitiesFile, entitiesHeader + interleave(entityStringList.sorted,  6 ).mkString("\n"))
     write(eDescsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
-    svarDescLists.foreach{ t =>
-      println(t._1)
-      write(
+    svarDescLists.foreach{ t => write(
         corePath + t._1.replaceAll("\\.", "/")+"/types/Types.scala",
         "package " + prePackage + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n")
     ) }
