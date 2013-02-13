@@ -157,4 +157,12 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     "OntologyMember " + getName + ":\n--------------------------------------------\n" +
       "Symbol:\n\t" + getSymbolString + "\n" + "Descriptions:\n\t" + getSVarDescriptions.mkString("\n\t") +
       (if (isEntity) "\nAssocEntity:\n\t" + getEntityString + "\nEntityDescription:\n\t" + getEntityDescription else "")
+
+  override def equals(p1: Any) = p1 match {
+    case that : OntologyMember => that.owlClass.equals(owlClass)
+    case _ => false
+  }
+
+  override def hashCode() =
+    owlClass.hashCode()
 }

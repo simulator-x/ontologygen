@@ -18,7 +18,7 @@ case class OntologyException(reason : String) extends Exception(reason)
 object OntoGenTwo{
   def main( args : Array[String]){
     val p = new OntoGenTwo
-    p.load(new File("NewCoreOntology.owl"))
+    p.load(new File("../../../applications/simthief/simthief/configs/SimThief.owl"))
     p.parse()
   }
 
@@ -45,6 +45,7 @@ class OntoGenTwo{
 
   //shortcuts
   val nullName = "nullType"
+  val symbolsBase = "Concept"
   val baseName = "SVarDescription"
   val oSymbol = "OntologySymbol"
   val oMember = "SVarDescription"
@@ -53,10 +54,11 @@ class OntoGenTwo{
   private val outFileNames  = "Types.scala"
   private val symbolsObject = "Symbols"
   //Files
-  private val corePath      = "src/out/core/src/"
-  private val symbolsFile   = "../../../core/src/" + "simx/core/ontology/" +symbolsObject+".scala"
-  private val entitiesFile  = corePath + "simx/core/ontology/entities/Entities.scala"
-  private val eDescsFile    = corePath + "simx/core/ontology/entities/EntityDescriptions.scala"
+  private val corePath      = "../../../core/src/"
+  private val debugCorePath = "src/out/core/src/"
+  private val symbolsFile   = corePath + "simx/core/ontology/" + symbolsObject + ".scala"
+  private val entitiesFile  = debugCorePath + "simx/core/ontology/entities/Entities.scala"
+  private val eDescsFile    = debugCorePath + "simx/core/ontology/entities/EntityDescriptions.scala"
 
   private val prePackage = "out.core.src."
 
@@ -128,7 +130,7 @@ class OntoGenTwo{
       init()
 
     val members           = collectMembers(baseClass.get)
-    var symbolsList       = List[String]()
+    var symbolsList       = collectMembers(getClass(symbolsBase).get).map(m => m.getSymbolString)
     var svarDescLists     = Map[String, List[String]]()
     var entityStringList  = List[String]()
     var entityDescList    = List[String]()
@@ -136,7 +138,7 @@ class OntoGenTwo{
     members.foreach{ m =>
       log.info( m + "\n" )
 
-      symbolsList = m.getSymbolString :: symbolsList
+      symbolsList = symbolsList + m.getSymbolString
       m.getSVarDescriptions.foreach{ desc =>
         svarDescLists = svarDescLists.updated(desc._1, desc._2 :: svarDescLists.getOrElse(desc._1, Nil))
       }
@@ -146,11 +148,11 @@ class OntoGenTwo{
       }
     }
 
-    write(symbolsFile,  symbolsHeader + interleave(symbolsList.sorted,        4 ).mkString("\n\t") + "\n}")
+    write(symbolsFile,  symbolsHeader + interleave(symbolsList.toList.sorted, 4 ).mkString("\n\t") + "\n}")
     write(entitiesFile, entitiesHeader + interleave(entityStringList.sorted,  6 ).mkString("\n"))
     write(eDescsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
     svarDescLists.foreach{ t => write(
-        corePath + t._1.replaceAll("\\.", "/")+"/types/Types.scala",
+        debugCorePath + t._1.replaceAll("\\.", "/")+"/types/Types.scala",
         "package " + prePackage + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n")
     ) }
   }
