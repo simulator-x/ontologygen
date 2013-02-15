@@ -130,8 +130,8 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     o.getObjectProperties(i)(o.getForComponentProp).headOption.collect{
       case x => o.getDataProperties(x)(o.getInPackageProp).headOption.collect{
         case literal => literal.getLiteral
-      }.getOrElse("")
-    }.getOrElse("")
+      }.getOrElse("simx.core")
+    }.getOrElse("simx.core")
 
   protected def getAnnotations( i : OWLIndividual ) : Set[String] =
     o.getObjectProperties(i)(o.getHasAProp).map{
