@@ -9,3 +9,7 @@ libraryDependencies <<= (scalaVersion, libraryDependencies) { (ver, deps) =>
 }
 
 scalacOptions += "-P:continuations:enable"
+
+classDirectory in Compile <<= target(_ / "scala/classes")
+
+classDirectory in Test <<= target(_ / "scala/test-classes")
