@@ -1,9 +1,6 @@
 package simx.components.ontology.generation
 
 import org.semanticweb.owlapi.model.OWLClass
-import collection.mutable.HashMap
-import java.util.UUID
-import actors.{Actor, OutputChannel, AbstractActor}
 
 
 /**
@@ -29,33 +26,9 @@ case class DescriptionStub(has          : List[OWLClass]          = Nil,
     _ ++ OntologyMember(_).collect{ case x => Set(x.getFullName) }.getOrElse(Set())
   }.mkString(", ")
 
-  override def toString() =
+  override def toString =
     "DescriptionStub" +
       (if (has.nonEmpty) " providing " + has.map(OntoGenTwo.getName).mkString(", ")  else "") +
       (if (hasAspect.nonEmpty) " with aspects " + hasAspect.map(OntoGenTwo.getName).mkString(", ") else "") +
       (if (oneOf.nonEmpty) " with one of (" + oneOf.mkString(", ") + ")" else "")
-}
-
-class SVarActor2 extends Actor{
-  val id = UUID.randomUUID()
-  def act() {}
-  
-  def toMyActor : MyActor = 
-    MyActor(id)
-}
-
-abstract class MyActor(id : UUID) extends AbstractActor{
-  def unpack : AbstractActor =
-    MyActor.get(id)
-}
-
-object MyActor{
-  val map = HashMap[UUID, AbstractActor]()
-
-  def get(id : UUID) =
-    map(id)
-
-  def main(args : Array[String]){
-    new MyActor(UUID.randomUUID())
-  }
 }
