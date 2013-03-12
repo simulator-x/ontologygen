@@ -63,6 +63,9 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
   def getFullName : String =
     "simx.core.ontology.types." + getName
 
+  def getEntityName : String =
+    "simx.core.ontology.entities." + getName
+
   private def createStub(prop : OWLObjectPropertyExpression, value : OWLClass, in : DescriptionStub) =
     if (prop equals o.getHasAProp)
       DescriptionStub(value :: in.has, in.hasAspect, in.oneOf)
@@ -94,7 +97,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     entity.toStringID.replaceAll(".*#", "")
 
   protected def getEntitySVarDescription : String =
-    "object "+ getName +" extends EntitySVarDescription(Symbols."+deCap(getName) + ", new " + getName + "(_) )"
+    "object "+ getName +" extends EntitySVarDescription[" + getEntityName + "](Symbols."+deCap(getName) + ", new " + getName + "(_) )"
 
   protected def getSVarDescription( i : OWLIndividual ) : String = {
     val base = getBase(i) match {
@@ -107,24 +110,25 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
       getConstructor(i) + ")"
   }
 
-  protected def typeString( i : OWLIndividual ) : String =
-    getDataType(i).collect{
-      case dt => "[" + getName(dt) + ", " + getName(getBaseDataType(i).getOrElse(dt)) + "]"
-    }.getOrElse("")
+  protected def typeString( i : OWLIndividual ) : String = {
+    getDataType(i) match {
+      case Some(dt) => "[" + getName(dt) + ", " + getName(getBaseDataType(i).getOrElse(dt)) + "]"
+      case None => getBaseDataType(i).collect{ case bt => "[" + getName(bt) + ", " + getName(bt) + "]" }.getOrElse("")
+    }
+  }
 
   protected def getConstructor(i : OWLIndividual) : String =
     o.getDataProperties(i)(o.getCtorProp).headOption.collect{
       case literal => " createdBy " + literal.getLiteral
     }.getOrElse("")
 
-  protected def getBaseDataType( i : OWLIndividual ) : Option[OWLIndividual] = {
+  protected def getBaseDataType( i : OWLIndividual ) : Option[OWLIndividual] =
     getBase(i).collect{
       case base if (base != i) => getDataType(base) match {
         case None => getBaseDataType(base)
         case data => data
       }
     }.getOrElse(None)
-  }
 
   protected def getTargetComponent( i : OWLIndividual ) : String =
     o.getObjectProperties(i)(o.getForComponentProp).headOption.collect{
