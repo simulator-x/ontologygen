@@ -107,7 +107,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
         "simx.core.ontology.types.NullType"
     }
     "object " + getName + " extends SVarDescription" + typeString(i) + "("+ base + " as Symbols." + deCap(getName) +
-      getConstructor(i) + ")"
+      getConstructor(i) + " definedAt \"" + owlClass.toStringID  +"\")"
   }
 
   protected def typeString( i : OWLIndividual ) : String = {
