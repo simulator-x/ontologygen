@@ -17,8 +17,8 @@ case class OntologyException(reason : String) extends Exception(reason)
 
 object OntoGenTwo{
   def main( args : Array[String]){
-    val p = new OntoGenTwo
-    p.load(new File("../../../applications/simthief/simthief/configs/SimThief.owl"))
+    val p = new OntoGenTwo()
+    p.load(new File("./applications/simthief/simthief/configs/SimThief.owl"))
     p.parse()
   }
 
@@ -32,7 +32,7 @@ object OntoGenTwo{
     getName(individual.asOWLNamedIndividual : OWLEntity)
 }
 
-class OntoGenTwo{
+class OntoGenTwo(corePath : String  = "./core/src/", onlyForComponent : Option[String] = None){
   private val log = LoggerFactory.getLogger(this.asInstanceOf[Object].getClass)
   //OWLPropertyNames
   private val hasConstructor = "hasConstructor"
@@ -53,8 +53,8 @@ class OntoGenTwo{
   private val outPkg        = ".ontology.types"
   private val outFileNames  = "Types.scala"
   private val symbolsObject = "Symbols"
+
   //Files
-  private val corePath      = "../../../core/src/"
   private val symbolsFile   = corePath + "simx/core/ontology/" + symbolsObject + ".scala"
   private val entitiesFile  = corePath + "simx/core/ontology/entities/Entities.scala"
   private val eDescsFile    = corePath + "simx/core/ontology/entities/EntityDescriptions.scala"
@@ -111,6 +111,10 @@ class OntoGenTwo{
     load(Some(IRI.create(file)))
   }
 
+  def load( url : String ){
+    load(Some(IRI.create(url)))
+  }
+
   def load( iri : Option[IRI] = None ) {
     if (iri.isDefined)
       ontologyIRI = iri
@@ -146,15 +150,19 @@ class OntoGenTwo{
       }
     }
 
-    write(symbolsFile,  symbolsHeader + interleave(symbolsList.toList.sorted, 4 ).mkString("\n\t") + "\n}")
-    write(entitiesFile, entitiesHeader + interleave(entityStringList.sorted,  6 ).mkString("\n"))
-    write(eDescsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
+    if (onlyForComponent.isEmpty){
+      write(symbolsFile,  symbolsHeader + interleave(symbolsList.toList.sorted, 4 ).mkString("\n\t") + "\n}")
+      write(entitiesFile, entitiesHeader + interleave(entityStringList.sorted,  6 ).mkString("\n"))
+      write(eDescsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
+    }
     svarDescLists.foreach{ t =>
-      println(t._1)
-      write(
-        corePath + t._1.replaceAll("\\.", "/")+"/types/Types.scala",
-        "package " + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n")
-      ) }
+      if (onlyForComponent.collect{ case comp => comp equals t._1}.getOrElse(false)){
+        println(t._1)
+        write(
+          corePath + t._1.replaceAll("\\.", "/")+"/types/Types.scala",
+          "package " + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n")
+        ) }
+    }
   }
 
   protected def interleave(in : List[String], p : Int) : List[String] = in match {
@@ -163,8 +171,17 @@ class OntoGenTwo{
     case list => list
   }
 
+  private def createParentDirs(f : File, isParent : Boolean = false){
+    if (!f.exists()){
+      createParentDirs(f.getParentFile, isParent = true)
+      if (isParent) f.mkdir() else f.createNewFile()
+    }
+  }
+
   protected def write(filename : String, toWrite : String){
-    val writer = new BufferedWriter(new FileWriter(new File(filename)))
+    val outFile = new File(filename)
+    createParentDirs(outFile)
+    val writer = new BufferedWriter(new FileWriter(outFile))
     writer.write(toWrite)
     writer.close()
   }
