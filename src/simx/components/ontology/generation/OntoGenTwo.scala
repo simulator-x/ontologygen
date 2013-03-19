@@ -17,8 +17,9 @@ case class OntologyException(reason : String) extends Exception(reason)
 
 object OntoGenTwo{
   def main( args : Array[String]){
-    val p = new OntoGenTwo()
-    p.load(new File("./applications/simthief/simthief/configs/SimThief.owl"))
+    val p = new OntoGenTwo("")
+    val url = args.headOption.getOrElse(throw new Exception("You must provide a URL when running OntoGenTwo"))
+    p.load(url)
     p.parse()
   }
 
@@ -30,9 +31,27 @@ object OntoGenTwo{
 
   def getName( individual : OWLIndividual ) : String =
     getName(individual.asOWLNamedIndividual : OWLEntity)
+
+  def apply[T](self : T, onlyForComponent : Option[String] = None) : OntoGenTwo = self match {
+    case c : Class[T] => getInstance(c,  onlyForComponent)
+    case _ => getInstance(self.getClass, onlyForComponent)
+  }
+
+
+  private def getInstance[T](c : Class[T], onlyForComponent : Option[String] = None) : OntoGenTwo = {
+    val pkgParts = c.getPackage.getName.split("\\.").reverse
+    var base = new File("").getAbsolutePath.replaceAll(pkgParts.head + ".*", pkgParts.head)
+    pkgParts.dropWhile( !base.endsWith(_) ).dropWhile{ first =>
+      if (base.endsWith(first)){
+        base = base.substring(0, base.length - first.length -1 )
+        true
+      }  else false
+    }
+    new OntoGenTwo(base, onlyForComponent)
+  }
 }
 
-class OntoGenTwo(corePath : String  = "./core/src/", onlyForComponent : Option[String] = None){
+class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
   private val log = LoggerFactory.getLogger(this.asInstanceOf[Object].getClass)
   //OWLPropertyNames
   private val hasConstructor = "hasConstructor"
@@ -44,20 +63,20 @@ class OntoGenTwo(corePath : String  = "./core/src/", onlyForComponent : Option[S
   private val has_a = "has"
 
   //shortcuts
-  val nullName = "nullType"
   val symbolsBase = "Concept"
   val baseName = "SVarDescription"
-  val oSymbol = "OntologySymbol"
-  val oMember = "SVarDescription"
+  val oSymbol  = "OntologySymbol"
+  val oMember  = "SVarDescription"
+  val nullName = "nullType"
 
   private val outPkg        = ".ontology.types"
   private val outFileNames  = "Types.scala"
   private val symbolsObject = "Symbols"
 
   //Files
-  private val symbolsFile   = corePath + "simx/core/ontology/" + symbolsObject + ".scala"
-  private val entitiesFile  = corePath + "simx/core/ontology/entities/Entities.scala"
-  private val eDescsFile    = corePath + "simx/core/ontology/entities/EntityDescriptions.scala"
+  private val symbolsFile   = corePath + File.separator + "core/src/simx/core/ontology/" + symbolsObject + ".scala"
+  private val entitiesFile  = corePath + File.separator + "core/src/simx/core/ontology/entities/Entities.scala"
+  private val eDescsFile    = corePath + File.separator + "core/src/simx/core/ontology/entities/EntityDescriptions.scala"
 
 
   private val symbolsHeader = "package simx.core.ontology\n\n" +
@@ -107,15 +126,13 @@ class OntoGenTwo(corePath : String  = "./core/src/", onlyForComponent : Option[S
     ontologyIRI = Some(iri)
   }
 
-  def load( file : File ) {
+  def load( file : File ) : this.type =
     load(Some(IRI.create(file)))
-  }
 
-  def load( url : String ){
+  def load( url : String ) : this.type =
     load(Some(IRI.create(url)))
-  }
 
-  def load( iri : Option[IRI] = None ) {
+  def load( iri : Option[IRI] = None ) : this.type = {
     if (iri.isDefined)
       ontologyIRI = iri
     if (ontologyIRI.isEmpty)
@@ -123,6 +140,7 @@ class OntoGenTwo(corePath : String  = "./core/src/", onlyForComponent : Option[S
     //actually load the ontology
     log.info("loading " + ontologyIRI.get)
     setOntology(manager.loadOntologyFromOntologyDocument(ontologyIRI.get))
+    this
   }
 
   def parse(){
@@ -156,12 +174,12 @@ class OntoGenTwo(corePath : String  = "./core/src/", onlyForComponent : Option[S
       write(eDescsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
     }
     svarDescLists.foreach{ t =>
-      if (onlyForComponent.collect{ case comp => comp equals t._1}.getOrElse(false)){
-        println(t._1)
-        write(
-          corePath + t._1.replaceAll("\\.", "/")+"/types/Types.scala",
-          "package " + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n")
-        ) }
+      if (onlyForComponent.collect{ case comp => comp equals t._1}.getOrElse(true)){
+        val out = corePath + File.separator +
+            t._1.replaceFirst("simx.", "").replaceAll("\\.ontology", "" ).replaceAll("\\.", File.separator) +
+            File.separator + "src" + File.separator + t._1.replaceAll("\\.", File.separator) + "/types/Types.scala"
+        write(out, "package " + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n") )
+      }
     }
   }
 
