@@ -17,7 +17,7 @@ case class OntologyException(reason : String) extends Exception(reason)
 
 object OntoGenTwo{
   def main( args : Array[String]){
-    val p = new OntoGenTwo("")
+    val p = new OntoGenTwo(".")
     val url = args.headOption.getOrElse(throw new Exception("You must provide a URL when running OntoGenTwo"))
     p.load(url)
     p.parse()
