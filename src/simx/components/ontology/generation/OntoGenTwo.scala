@@ -53,7 +53,7 @@ object OntoGenTwo{
     getName(individual.asOWLNamedIndividual : OWLEntity)
 
   def apply[T](self : T, onlyForComponent : Option[String] = None) : OntoGenTwo = self match {
-    case c : Class[T] => getInstance(c,  onlyForComponent)
+    case c : Class[_] => getInstance(c,  onlyForComponent)
     case _ => getInstance(self.getClass, onlyForComponent)
   }
 
