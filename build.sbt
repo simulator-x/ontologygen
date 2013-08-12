@@ -4,11 +4,11 @@ unmanagedJars in Compile <<= baseDirectory map { base => ((base ** "lib") ** "*.
 
 autoCompilerPlugins := true
 
-libraryDependencies <<= (scalaVersion, libraryDependencies) { (ver, deps) =>
-    deps :+ compilerPlugin("org.scala-lang.plugins" % "continuations" % ver)
-}
+addCompilerPlugin("org.scala-lang.plugins" % "continuations" % "2.10.1")
 
 scalacOptions += "-P:continuations:enable"
+
+ivyXML := scala.xml.XML.load( ontologygen.base + "/ivy.xml" ) \ "dependencies"
 
 classDirectory in Compile <<= target(_ / "scala/classes")
 

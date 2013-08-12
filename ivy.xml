@@ -1,0 +1,11 @@
+<ivy-module version="2.0" xmlns:e="http://ant.apache.org/ivy/extra">
+    <info organisation="The Siris Team" module="core" revision="1.0" />
+    <dependencies>    
+      <dependency org="org.scala-lang.plugins" name="continuations" rev="2.10.1" />
+      <dependency org="net.sourceforge.owlapi" name="owlapi-distribution" rev="3.4.5" />
+      <dependency org="org.scala-lang" name="scala-library" rev="2.10.0" />
+      <dependency org="org.slf4j" name="log4j-over-slf4j" rev="1.6.1" />
+      <dependency org="log4j" name="log4j" rev="1.2.17" />
+    </dependencies>
+</ivy-module>
+

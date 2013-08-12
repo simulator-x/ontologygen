@@ -4,6 +4,13 @@
     <facet type="scala" name="Scala">
       <configuration />
     </facet>
+    <facet type="IvyIDEA" name="IvyIDEA">
+      <configuration ivyFile="$MODULE_DIR$/ivy.xml" useProjectSettings="true" useCustomIvySettings="true" ivySettingsFile="" onlyResolveSelectedConfigs="false">
+        <propertiesSettings>
+          <propertiesFiles includeProjectLevelPropertiesFiles="true" />
+        </propertiesSettings>
+      </configuration>
+    </facet>
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/scala/classes" />
@@ -14,8 +21,32 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="owl" level="project" />
-    <orderEntry type="library" name="slf4j" level="project" />
+    <orderEntry type="module-library" exported="">
+      <library name="IvyIDEA">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.plugins/continuations/jars/continuations-2.10.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.10.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.10.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.10.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-distribution/bundles/owlapi-distribution-3.4.5.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-apibinding/bundles/owlapi-apibinding-3.4.5.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-api/bundles/owlapi-api-3.4.5.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.felix/org.osgi.core/bundles/org.osgi.core-1.0.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-impl/bundles/owlapi-impl-3.4.5.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-parsers/bundles/owlapi-parsers-3.4.5.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-tools/bundles/owlapi-tools-3.4.5.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.slf4j/log4j-over-slf4j/jars/log4j-over-slf4j-1.6.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.slf4j/slf4j-api/jars/slf4j-api-1.6.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/log4j/log4j/bundles/log4j-1.2.17.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.openejb/javaee-api/jars/javaee-api-5.0-2.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/javax.mail/mail/jars/mail-1.4.3.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/javax.activation/activation/jars/activation-1.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.geronimo.specs/geronimo-jms_1.1_spec/jars/geronimo-jms_1.1_spec-1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 
