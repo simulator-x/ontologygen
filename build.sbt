@@ -10,6 +10,8 @@ libraryDependencies <<= (scalaVersion, libraryDependencies) { (ver, deps) =>
 
 scalacOptions += "-P:continuations:enable"
 
+ivyXML := scala.xml.XML.load( ontologygen.base + "/ivy.xml" ) \ "dependencies"
+
 classDirectory in Compile <<= target(_ / "scala/classes")
 
 classDirectory in Test <<= target(_ / "scala/test-classes")

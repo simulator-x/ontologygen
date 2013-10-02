@@ -53,7 +53,7 @@ object OntoGenTwo{
     getName(individual.asOWLNamedIndividual : OWLEntity)
 
   def apply[T](self : T, onlyForComponent : Option[String] = None) : OntoGenTwo = self match {
-    case c : Class[T] => getInstance(c,  onlyForComponent)
+    case c : Class[_] => getInstance(c,  onlyForComponent)
     case _ => getInstance(self.getClass, onlyForComponent)
   }
 
@@ -90,7 +90,7 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
   val nullName = "nullType"
 
   private val outPkg        = ".ontology.types"
-  private val outFileNames  = "Types.scala"
+  private val outFileNames  = "package.scala"
   private val symbolsObject = "Symbols"
 
   //Files
@@ -115,10 +115,32 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
     "import simx.core.entity.description.EntityAspect\n" +
     "import simx.core.ontology.SpecificDescription\n\n"
 
-  private val typesHeader = "import simx.core.ontology.SVarDescription\n" +
-    "import simx.core.ontology.EntitySVarDescription\n" +
-    "import simx.core.ontology.entities._\n" +
-    "import simx.core.ontology.Symbols\n\n"
+  private val typesHeader = """/*
+ * Copyright 2013 The SIRIS Project
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ *
+ * The SIRIS Project is a cooperation between Beuth University, Berlin and the
+ * HCI Group at the University of Würzburg. The project is funded by the German
+ * Federal Ministry of Education and Research (grant no. 17N4409).
+ */
+
+ import simx.core.ontology.entities._
+ import simx.core.ontology.{Symbols, SVarDescription}
+
+ package object types {
+   def init(){}
+                            """
 
   private def filenameFromPackage( pkgName : String) = {
     val dir = "." + File.separator + pkgName + File.separator + "src" + File.separator +
@@ -197,8 +219,8 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
       if (onlyForComponent.collect{ case comp => comp equals t._1}.getOrElse(true)){
         val out = corePath + File.separator +
             t._1.replaceFirst("simx.", "").replaceAll("\\.ontology", "" ).replaceAll("\\.", File.separator) +
-            File.separator + "src" + File.separator + t._1.replaceAll("\\.", File.separator) + "/types/Types.scala"
-        write(out, "package " + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n") )
+            File.separator + "src" + File.separator + t._1.replaceAll("\\.", File.separator) + "/types/package.scala"
+        write(out, "package " + t._1 + "\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n") + "\n}" )
       }
     }
   }
