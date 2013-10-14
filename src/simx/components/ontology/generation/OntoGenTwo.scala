@@ -140,7 +140,7 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
 
  package object types {
    def init(){}
-                            """
+"""
 
   private def filenameFromPackage( pkgName : String) = {
     val dir = "." + File.separator + pkgName + File.separator + "src" + File.separator +
