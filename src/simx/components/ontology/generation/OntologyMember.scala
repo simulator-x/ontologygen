@@ -76,7 +76,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     else ""
 
   private def getDescriptionStub : Option[DescriptionStub] =
-    o.getAnonymousSuperClasses(owlClass).map( handleAnonymousSuperClass(_)).foldLeft(None : Option[DescriptionStub]){
+    o.getAnonymousSuperClasses(owlClass).map( handleAnonymousSuperClass ).foldLeft(None : Option[DescriptionStub]){
       (a, b) => b.merge(a.getOrElse(DescriptionStub()))
     }
 
@@ -100,7 +100,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     case someValuesFrom : OWLObjectSomeValuesFrom =>
       createStub(someValuesFrom.getProperty, someValuesFrom.getFiller.asOWLClass(), DescriptionStub())
     case unionOf : OWLObjectUnionOf =>
-      val union = unionOf.getOperands.map(handleAnonymousSuperClass(_))
+      val union = unionOf.getOperands.map(handleAnonymousSuperClass)
       DescriptionStub(Nil, Nil, if (union.nonEmpty && !union.head.isEmpty) union.toList else Nil)
     case expr =>
       println("unexpected type: " + expr)
@@ -117,11 +117,12 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     entity.toStringID.replaceAll(".*#", "")
 
   protected def getEntitySVarDescription : String =
-    "object "+ getName +" extends EntitySVarDescription[" + getEntityName + "](Symbols."+deCap(getName) + ", new " + getName + "(_) )"
+    "object "+ getName +" extends EntitySVarDescription[" + getEntityName + "](Symbols."+deCap(getName) +
+      ", new " + getName + "(_), \"" + owlClass.toStringID + "\" )"
 
   protected def getSVarDescription( i : OWLIndividual ) : String = {
     val base = getBase(i) match {
-      case Some(b) if (OntologyMember(b).isDefined) =>
+      case Some(b) if OntologyMember(b).isDefined =>
         getTargetComponent(getBase(i).get) + ".ontology.types."+ OntologyMember(b).get.getName
       case _ =>
         "simx.core.ontology.types.NullType"
@@ -144,7 +145,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
 
   protected def getBaseDataType( i : OWLIndividual ) : Option[OWLIndividual] =
     getBase(i).collect{
-      case base if (base != i) => getDataType(base) match {
+      case base if base != i => getDataType(base) match {
         case None => getBaseDataType(base)
         case data => data
       }

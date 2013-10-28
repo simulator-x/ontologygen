@@ -90,7 +90,7 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
   val nullName = "nullType"
 
   private val outPkg        = ".ontology.types"
-  private val outFileNames  = "Types.scala"
+  private val outFileNames  = "package.scala"
   private val symbolsObject = "Symbols"
 
   //Files
@@ -115,12 +115,11 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
     "import simx.core.entity.description.EntityAspect\n" +
     "import simx.core.ontology.SpecificDescription\n\n"
 
-  private val typesHeader = "import simx.core.ontology.SVarDescription\n" +
-    "import simx.core.ontology.EntitySVarDescription\n" +
-    "import simx.core.ontology.entities._\n" +
-    "import simx.core.ontology.Symbols\n\n"
+  private val typesHeader = "import simx.core.ontology.entities._\n\n" +
+    "package object types{\n" +
+    "\tdef init(){}\n\t"
 
-  private def filenameFromPackage( pkgName : String) = {
+  private def filenameFromPackage( pkgName : String ) = {
     val dir = "." + File.separator + pkgName + File.separator + "src" + File.separator +
       (pkgName + outPkg).replaceAll("\\.", File.separator) + File.separator
     val tmp = new File(dir)
@@ -197,8 +196,8 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
       if (onlyForComponent.collect{ case comp => comp equals t._1}.getOrElse(true)){
         val out = corePath + File.separator +
             t._1.replaceFirst("simx.", "").replaceAll("\\.ontology", "" ).replaceAll("\\.", File.separator) +
-            File.separator + "src" + File.separator + t._1.replaceAll("\\.", File.separator) + "/types/Types.scala"
-        write(out, "package " + t._1 + ".types\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n") )
+            File.separator + "src" + File.separator + t._1.replaceAll("\\.", File.separator) + "/types/package.scala"
+        write(out, "package " + t._1 + "\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n\t") + "\n}" )
       }
     }
   }
