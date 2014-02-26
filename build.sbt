@@ -15,3 +15,5 @@ ivyXML := scala.xml.XML.load( ontologygen.base + "/ivy.xml" ) \ "dependencies"
 classDirectory in Compile <<= target(_ / "scala/classes")
 
 classDirectory in Test <<= target(_ / "scala/test-classes")
+
+TaskKey[Unit]("copy-templates") := IO.copy( ((baseDirectory.value / "src/simx/components/ontology/generation/templates") ** "*.tpl").get map {f => (f, baseDirectory.value / "target/scala/classes/simx/components/ontology/generation/templates" / f.getName)}  )

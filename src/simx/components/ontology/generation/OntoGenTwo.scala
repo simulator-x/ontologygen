@@ -26,6 +26,7 @@ import org.semanticweb.owlapi.model._
 import collection.JavaConversions.asScalaSet
 import org.slf4j.LoggerFactory
 import java.io.{FileWriter, BufferedWriter, File}
+import scala.io.Source
 
 /**
  * @author dwiebusch
@@ -115,9 +116,12 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
     "import simx.core.entity.description.EntityAspect\n" +
     "import simx.core.ontology.SpecificDescription\n\n"
 
-  private val typesHeader = "import simx.core.ontology.entities._\n\n" +
-    "package object types{\n" +
-    "\tdef init(){}\n\t"
+  val c = getClass()
+  private val typesHeader = loadTemplate("TypesHeader") + "\n\t"
+
+  private def loadTemplate(name: String) =
+    Source.fromInputStream(c.getResourceAsStream("/simx/components/ontology/generation/templates/"+name+".scala.tpl")).
+      getLines().mkString("\n")
 
   private def filenameFromPackage( pkgName : String ) = {
     val dir = "." + File.separator + pkgName + File.separator + "src" + File.separator +
