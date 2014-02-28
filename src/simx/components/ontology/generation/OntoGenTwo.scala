@@ -72,66 +72,8 @@ object OntoGenTwo{
   }
 }
 
-class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
+class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None) extends OntoIO {
   private val log = LoggerFactory.getLogger(this.asInstanceOf[Object].getClass)
-  //OWLPropertyNames
-  private val hasConstructor = "hasConstructor"
-  private val forComponent = "forComponent"
-  private val hasDataType = "hasDataType"
-  private val inPackage = "inPackage"
-  private val hasAspect = "hasAspect"
-  private val basedOn = "basedOn"
-  private val has_a = "has"
-
-  //shortcuts
-  val symbolsBase = "Concept"
-  val baseName = "SVarDescription"
-  val oSymbol  = "OntologySymbol"
-  val oMember  = "SVarDescription"
-  val nullName = "nullType"
-
-  private val outPkg        = ".ontology.types"
-  private val outFileNames  = "package.scala"
-  private val symbolsObject = "Symbols"
-
-  //Files
-  private val symbolsFile   = corePath + File.separator + "core/src/simx/core/ontology/" + symbolsObject + ".scala"
-  private val entitiesFile  = corePath + File.separator + "core/src/simx/core/ontology/entities/Entities.scala"
-  private val eDescsFile    = corePath + File.separator + "core/src/simx/core/ontology/entities/EntityDescriptions.scala"
-
-
-  private val symbolsHeader = "package simx.core.ontology\n\n" +
-    "import simx.core.entity.description.Semantics\n" +
-    "import simx.core.ontology.types.OntologySymbol\n\n" +
-    "object "+symbolsObject+"{\n" +
-    "  private implicit def symToSem( s : Symbol ) =  new Semantics {\n" +
-    "    def toSymbol = s\n" +
-    "  }\n\n\t"
-
-  private val entitiesHeader = "package simx.core.ontology.entities\n\n" +
-    "import simx.core.entity.Entity\n\n"
-
-  private val descriptionHeader = "package simx.core.ontology.entities\n\n" +
-    "import simx.core.ontology\n" +
-    "import simx.core.entity.description.EntityAspect\n" +
-    "import simx.core.ontology.SpecificDescription\n\n"
-
-  val c = getClass()
-  private val typesHeader = loadTemplate("TypesHeader") + "\n\t"
-
-  private def loadTemplate(name: String) =
-    Source.fromInputStream(c.getResourceAsStream("/simx/components/ontology/generation/templates/"+name+".scala.tpl")).
-      getLines().mkString("\n")
-
-  private def filenameFromPackage( pkgName : String ) = {
-    val dir = "." + File.separator + pkgName + File.separator + "src" + File.separator +
-      (pkgName + outPkg).replaceAll("\\.", File.separator) + File.separator
-    val tmp = new File(dir)
-    if (!tmp.exists)
-      tmp.mkdir
-    dir + outFileNames
-  }
-
 
   //internal variables
   protected var manager                                       = OWLManager.createOWLOntologyManager
@@ -173,7 +115,7 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
       init()
 
     val members           = collectMembers(baseClass.get)
-    var symbolsList       = collectMembers(getClass(symbolsBase).get).map(m => m.getSymbolString)
+    var symbolsList       = collectMembers(getOWLClass(symbolsBase).get).map(m => m.getSymbolString)
     var svarDescLists     = Map[String, List[String]]()
     var entityStringList  = List[String]()
     var entityDescList    = List[String]()
@@ -194,14 +136,14 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
     if (onlyForComponent.isEmpty){
       write(symbolsFile,  symbolsHeader + interleave(symbolsList.toList.sorted, 4 ).mkString("\n\t") + "\n}")
       write(entitiesFile, entitiesHeader + interleave(entityStringList.sorted,  6 ).mkString("\n"))
-      write(eDescsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
+      write(entityDescriptionsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
     }
     svarDescLists.foreach{ t =>
       if (onlyForComponent.collect{ case comp => comp equals t._1}.getOrElse(true)){
         val out = corePath + File.separator +
             t._1.replaceFirst("simx.", "").replaceAll("\\.ontology", "" ).replaceAll("\\.", File.separator) +
             File.separator + "src" + File.separator + t._1.replaceAll("\\.", File.separator) + "/types/package.scala"
-        write(out, "package " + t._1 + "\n\n" + typesHeader + interleave(t._2.sorted, 7).mkString("\n\t") + "\n}" )
+        write(out, typesHeader("package " + t._1) + interleave(t._2.sorted, 7).mkString("\n\t") + "\n}" )
       }
     }
   }
@@ -251,11 +193,11 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
     val objectProps = asScalaSet(manager.getOntologies).foldLeft(Set[OWLObjectProperty]()){
       (set, onto) => set ++ asScalaSet(onto.getObjectPropertiesInSignature).toSet
     }
-    nullType            = getClass(nullName).collect{
+    nullType            = getOWLClass(nullName).collect{
       case c => c.getIndividuals(manager.getOntologies).iterator().next()
     }
-    entityClass         = getClass("Entity")
-    baseClass           = getClass(baseName)
+    entityClass         = getOWLClass("Entity")
+    baseClass           = getOWLClass(baseName)
     hasAObjectProp      = objectProps.find( OntoGenTwo.getName(_) equals has_a )
     baseObjectProp      = objectProps.find( OntoGenTwo.getName(_) equals basedOn )
     hasAspectObjectProp = objectProps.find( OntoGenTwo.getName(_) equals hasAspect )
@@ -265,7 +207,7 @@ class OntoGenTwo(corePath : String, onlyForComponent : Option[String] = None){
     ctorProp            = dataProps.find( OntoGenTwo.getName(_) equals hasConstructor )
   }
 
-  protected def getClass( name : String ) : Option[OWLClass] = ontology match {
+  protected def getOWLClass( name : String ) : Option[OWLClass] = ontology match {
     case Some(o) => o.getClassesInSignature(true).toArray(Array[OWLClass]()).find( _.toStringID.endsWith("#"+name))
     case None => None
   }
