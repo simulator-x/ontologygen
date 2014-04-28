@@ -127,21 +127,16 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
       case _ =>
         "simx.core.ontology.types.NullType"
     }
-    "object " + getName + " extends SVarDescription" + typeString(i) + "("+ base + " as Symbols." + deCap(getName) +
-      getConstructor(i) + " definedAt \"" + owlClass.toStringID  +"\")"
+    "object " + getName + " extends SVarDescription("+ base + " as Symbols." + deCap(getName) +
+      typeString(i) + " definedAt \"" + owlClass.toStringID  +"\")"
   }
 
   protected def typeString( i : OWLIndividual ) : String = {
     getDataType(i) match {
-      case Some(dt) => "[" + getName(dt) + ", " + getName(getBaseDataType(i).getOrElse(dt)) + "]"
-      case None => getBaseDataType(i).collect{ case bt => "[" + getName(bt) + ", " + getName(bt) + "]" }.getOrElse("")
+      case Some(dt) => " withType classOf[" + getName(dt) + "]"
+      case None => ""
     }
   }
-
-  protected def getConstructor(i : OWLIndividual) : String =
-    o.getDataProperties(i)(o.getCtorProp).headOption.collect{
-      case literal => " createdBy " + literal.getLiteral
-    }.getOrElse("")
 
   protected def getBaseDataType( i : OWLIndividual ) : Option[OWLIndividual] =
     getBase(i).collect{
