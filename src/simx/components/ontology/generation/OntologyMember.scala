@@ -117,8 +117,8 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     entity.toStringID.replaceAll(".*#", "")
 
   protected def getEntitySVarDescription : String =
-    "object "+ getName +" extends EntitySVarDescription[" + getEntityName + "](Symbols."+deCap(getName) +
-      ", new " + getName + "(_), \"" + owlClass.toStringID + "\" )"
+    "object "+ getName +" extends simx.core.ontology.EntitySVarDescription[" + getEntityName + "](simx.core.ontology.Symbols."+deCap(getName) +
+      ", new simx.core.ontology.entities." + getName + "(_), \"" + owlClass.toStringID + "\" )"
 
   protected def getSVarDescription( i : OWLIndividual ) : String = {
     val base = getBase(i) match {
@@ -127,7 +127,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
       case _ =>
         "simx.core.ontology.types.NullType"
     }
-    "object " + getName + " extends SVarDescription("+ base + " as Symbols." + deCap(getName) +
+    "object " + getName + " extends simx.core.ontology.SVarDescription("+ base + " as simx.core.ontology.Symbols." + deCap(getName) +
       typeString(i) + " definedAt \"" + owlClass.toStringID  +"\")"
   }
 
