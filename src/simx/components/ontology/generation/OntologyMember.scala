@@ -54,7 +54,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     "val " + deCap(getName) + " = OntologySymbol(Symbol(\"" + getName + "\"))"
 
   def getEntityString : String =
-    if (isEntity) "class " + getName + "( e : Entity = new Entity ) extends Entity(e) " else ""
+    if (isEntity) "class " + getName + "( e : Entity, a : SVarActor ) extends Entity(e)(a) " else ""
 
   def getSVarDescriptions : Map[String, String] = {
     val initialMap =
@@ -118,7 +118,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
 
   protected def getEntitySVarDescription : String =
     "object "+ getName +" extends simx.core.ontology.EntitySVarDescription[" + getEntityName + "](simx.core.ontology.Symbols."+deCap(getName) +
-      ", new simx.core.ontology.entities." + getName + "(_), \"" + owlClass.toStringID + "\" )"
+      ", new simx.core.ontology.entities." + getName + "(_, _), \"" + owlClass.toStringID + "\" )"
 
   protected def getSVarDescription( i : OWLIndividual ) : String = {
     val base = getBase(i) match {
