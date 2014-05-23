@@ -39,34 +39,20 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/org.slf4j/slf4j-ext/jars/slf4j-ext-1.7.5.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-1.2-api/jars/log4j-1.2-api-2.0-rc1.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-core/jars/log4j-core-2.0-rc1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/bundles/scala-xml_2.11-1.0.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.plugins/scala-continuations-library_2.11/bundles/scala-continuations-library_2.11-1.0.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang.modules/scala-swing_2.11/bundles/scala-swing_2.11-1.0.1.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.typesafe.akka/akka-actor_2.11/jars/akka-actor_2.11-2.3.2.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/com.typesafe/config/bundles/config-1.2.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-actors-migration_2.11/jars/scala-actors-migration_2.11-1.1.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.scala-lang/scala-actors/jars/scala-actors-2.11.0.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/ch.qos.cal10n/cal10n-api/jars/cal10n-api-0.7.4.jar!/" />
         </CLASSES>
-        <JAVADOC>
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-distribution/javadocs/owlapi-distribution-3.4.5-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-apibinding/javadocs/owlapi-apibinding-3.4.5-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-api/javadocs/owlapi-api-3.4.5-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-impl/javadocs/owlapi-impl-3.4.5-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-parsers/javadocs/owlapi-parsers-3.4.5-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-tools/javadocs/owlapi-tools-3.4.5-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-slf4j-impl/javadocs/log4j-slf4j-impl-2.0-rc1-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.slf4j/slf4j-api/javadocs/slf4j-api-1.7.5-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-api/javadocs/log4j-api-2.0-rc1-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.slf4j/slf4j-ext/javadocs/slf4j-ext-1.7.5-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-1.2-api/javadocs/log4j-1.2-api-2.0-rc1-javadoc.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-core/javadocs/log4j-core-2.0-rc1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-apibinding/sources/owlapi-apibinding-3.4.5-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-api/sources/owlapi-api-3.4.5-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-impl/sources/owlapi-impl-3.4.5-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-parsers/sources/owlapi-parsers-3.4.5-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/net.sourceforge.owlapi/owlapi-tools/sources/owlapi-tools-3.4.5-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-slf4j-impl/sources/log4j-slf4j-impl-2.0-rc1-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.slf4j/slf4j-api/sources/slf4j-api-1.7.5-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-api/sources/log4j-api-2.0-rc1-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.slf4j/slf4j-ext/sources/slf4j-ext-1.7.5-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-1.2-api/sources/log4j-1.2-api-2.0-rc1-sources.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.apache.logging.log4j/log4j-core/sources/log4j-core-2.0-rc1-sources.jar!/" />
-        </SOURCES>
+        <JAVADOC />
+        <SOURCES />
       </library>
     </orderEntry>
   </component>
