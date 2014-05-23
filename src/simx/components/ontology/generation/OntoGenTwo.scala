@@ -118,7 +118,7 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
     var symbolsList       = collectMembers(getOWLClass(symbolsBase).get).map(m => m.getSymbolString)
     var svarDescLists     = Map[String, List[String]]()
     var entityStringList  = List[String]()
-    var entityDescList    = List[String]()
+    //var entityDescList    = List[String]()
 
     members.foreach{ m =>
       log.info( m + "\n" )
@@ -129,7 +129,7 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
       }
       if (m.isEntity){
         entityStringList = m.getEntityString :: entityStringList
-        entityDescList = m.getEntityDescription :: entityDescList
+        //entityDescList = m.getEntityDescription :: entityDescList
       }
     }
 
