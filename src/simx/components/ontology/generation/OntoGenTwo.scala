@@ -136,7 +136,7 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
     if (onlyForComponent.isEmpty){
       write(symbolsFile,  symbolsHeader + interleave(symbolsList.toList.sorted, 4 ).mkString("\n\t") + "\n}")
       write(entitiesFile, entitiesHeader + interleave(entityStringList.sorted,  6 ).mkString("\n"))
-      write(entityDescriptionsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
+      //write(entityDescriptionsFile,   descriptionHeader + interleave(entityDescList.sorted, 11).mkString("\n"))
     }
     svarDescLists.foreach{ t =>
       if (onlyForComponent.collect{ case comp => comp equals t._1}.getOrElse(true)){

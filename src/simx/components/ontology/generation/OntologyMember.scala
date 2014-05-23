@@ -58,7 +58,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
 
   def getSVarDescriptions : Map[String, String] = {
     val initialMap =
-      if (isEntity)
+      if (isEntity && getIndividuals.isEmpty)
         Map[String, String]("simx.core.ontology" -> getEntitySVarDescription)
       else
         Map[String, String]()
