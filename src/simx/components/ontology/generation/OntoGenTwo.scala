@@ -36,6 +36,22 @@ import scala.io.Source
 
 case class OntologyException(reason : String) extends Exception(reason)
 
+object OntoGenSimxOntology {
+  /**
+   * Generates scala code from an ontology for a SimXApplication
+   * @param args Requires two space-separated strings: < SimX base directory > < SimXApplication working directory >
+   */
+  def main(args: Array[String]) {
+    val base = args.toList.headOption.
+      getOrElse(throw new Exception("You must provide the simx base directory when running OntoGenSimxOntology"))
+    val wd = args.toList.tail.headOption.
+      getOrElse(throw new Exception("You must provide a working directory when running OntoGenSimxOntology"))
+    val p = new OntoGenTwo(base)
+    p.load(new File(wd + "/simxOntology.owl"))
+    p.parse()
+  }
+}
+
 object OntoGenTwo{
   def main( args : Array[String]){
     val p = new OntoGenTwo(".")
