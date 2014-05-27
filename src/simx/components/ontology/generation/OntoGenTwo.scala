@@ -38,16 +38,22 @@ case class OntologyException(reason : String) extends Exception(reason)
 
 object OntoGenSimxOntology {
   /**
-   * Generates scala code from an ontology for a SimXApplication
+   * Generates Symbols, SVarDescriptions, and EntityDescriptions
+   * from an ontology for a SimXApplication.
    * @param args Requires two space-separated strings: < SimX base directory > < SimXApplication working directory >
    */
   def main(args: Array[String]) {
     val base = args.toList.headOption.
-      getOrElse(throw new Exception("You must provide the simx base directory when running OntoGenSimxOntology"))
+      getOrElse(throw new Exception(
+      "[error][Ontology Generation] No simx base directory in program arguments."))
     val wd = args.toList.tail.headOption.
-      getOrElse(throw new Exception("You must provide a working directory when running OntoGenSimxOntology"))
+      getOrElse(throw new Exception(
+      "[error][Ontology Generation] No working directory in program arguments."))
     val p = new OntoGenTwo(base)
-    p.load(new File(wd + "/simxOntology.owl"))
+    val simxOntologyFile = new File(wd + "/simxOntology.owl")
+    if(!simxOntologyFile.exists())
+      throw new Exception("[error][Ontology Generation] No 'simxOntology.owl' found in " + wd)
+    p.load(simxOntologyFile)
     p.parse()
   }
 }
