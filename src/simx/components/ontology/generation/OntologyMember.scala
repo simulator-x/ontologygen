@@ -54,17 +54,17 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     "val " + deCap(getName) + " = OntologySymbol(Symbol(\"" + getName + "\"))"
 
   def getEntityString : String =
-    if (isEntity) "class " + getName + "( e : Entity = new Entity ) extends Entity(e) " else ""
+    if (isEntity) "class " + getName + "( e : Entity, a : SVarActor ) extends Entity(e)(a) " else ""
 
   def getSVarDescriptions : Map[String, String] = {
-    val initialMap =
-      if (isEntity)
+
+      if (isEntity /*&& getIndividuals.isEmpty*/)
         Map[String, String]("simx.core.ontology" -> getEntitySVarDescription)
       else
-        Map[String, String]()
-    getIndividuals.foldLeft(initialMap){
-      (m, i) => m.updated(getTargetComponent(i) + ".ontology", if (isEntity) getEntitySVarDescription else getSVarDescription(i))
-    }
+        getIndividuals.foldLeft(Map[String, String]()) {
+          (m, i) => m.updated(getTargetComponent(i) + ".ontology", /*if (isEntity) getEntitySVarDescription else*/ getSVarDescription(i))
+        }
+
   }
 
   def getEntityDescription : String =
@@ -76,7 +76,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     else ""
 
   private def getDescriptionStub : Option[DescriptionStub] =
-    o.getAnonymousSuperClasses(owlClass).map( handleAnonymousSuperClass(_)).foldLeft(None : Option[DescriptionStub]){
+    o.getAnonymousSuperClasses(owlClass).map( handleAnonymousSuperClass ).foldLeft(None : Option[DescriptionStub]){
       (a, b) => b.merge(a.getOrElse(DescriptionStub()))
     }
 
@@ -100,7 +100,7 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     case someValuesFrom : OWLObjectSomeValuesFrom =>
       createStub(someValuesFrom.getProperty, someValuesFrom.getFiller.asOWLClass(), DescriptionStub())
     case unionOf : OWLObjectUnionOf =>
-      val union = unionOf.getOperands.map(handleAnonymousSuperClass(_))
+      val union = unionOf.getOperands.map(handleAnonymousSuperClass)
       DescriptionStub(Nil, Nil, if (union.nonEmpty && !union.head.isEmpty) union.toList else Nil)
     case expr =>
       println("unexpected type: " + expr)
@@ -117,34 +117,30 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     entity.toStringID.replaceAll(".*#", "")
 
   protected def getEntitySVarDescription : String =
-    "object "+ getName +" extends EntitySVarDescription[" + getEntityName + "](Symbols."+deCap(getName) + ", new " + getName + "(_) )"
+    "object "+ getName +" extends simx.core.ontology.EntitySVarDescription[" + getEntityName + "](simx.core.ontology.Symbols."+deCap(getName) +
+      ", new simx.core.ontology.entities." + getName + "(_, _), \"" + owlClass.toStringID + "\" )"
 
   protected def getSVarDescription( i : OWLIndividual ) : String = {
     val base = getBase(i) match {
-      case Some(b) if (OntologyMember(b).isDefined) =>
+      case Some(b) if OntologyMember(b).isDefined =>
         getTargetComponent(getBase(i).get) + ".ontology.types."+ OntologyMember(b).get.getName
       case _ =>
         "simx.core.ontology.types.NullType"
     }
-    "object " + getName + " extends SVarDescription" + typeString(i) + "("+ base + " as Symbols." + deCap(getName) +
-      getConstructor(i) + " definedAt \"" + owlClass.toStringID  +"\")"
+    "object " + getName + " extends simx.core.ontology.SVarDescription("+ base + " as simx.core.ontology.Symbols." + deCap(getName) +
+      typeString(i) + " definedAt \"" + owlClass.toStringID  +"\")"
   }
 
   protected def typeString( i : OWLIndividual ) : String = {
     getDataType(i) match {
-      case Some(dt) => "[" + getName(dt) + ", " + getName(getBaseDataType(i).getOrElse(dt)) + "]"
-      case None => getBaseDataType(i).collect{ case bt => "[" + getName(bt) + ", " + getName(bt) + "]" }.getOrElse("")
+      case Some(dt) => " withType classOf[" + getName(dt) + "]"
+      case None => ""
     }
   }
 
-  protected def getConstructor(i : OWLIndividual) : String =
-    o.getDataProperties(i)(o.getCtorProp).headOption.collect{
-      case literal => " createdBy " + literal.getLiteral
-    }.getOrElse("")
-
   protected def getBaseDataType( i : OWLIndividual ) : Option[OWLIndividual] =
     getBase(i).collect{
-      case base if (base != i) => getDataType(base) match {
+      case base if base != i => getDataType(base) match {
         case None => getBaseDataType(base)
         case data => data
       }
