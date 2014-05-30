@@ -10,8 +10,6 @@ libraryDependencies <<= (scalaVersion, libraryDependencies) { (ver, deps) =>
 
 ivyXML := scala.xml.XML.load( ontologyGen.base + "/ivy.xml" ) \ "dependencies"
 
-ivyXML := scala.xml.XML.load( ontologygen.base + "/ivy.xml" ) \ "dependencies"
-
 classDirectory in Compile <<= target(_ / "scala/classes")
 
 classDirectory in Test <<= target(_ / "scala/test-classes")
