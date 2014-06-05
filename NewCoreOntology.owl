@@ -1,0 +1,2714 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE Ontology [
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY xml "http://www.w3.org/XML/1998/namespace" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<Ontology xmlns="http://www.w3.org/2002/07/owl#"
+     xml:base="http://www.hci.uni-wuerzburg.de/ontologies/2011/10/NewCoreOntology.owl"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     ontologyIRI="http://www.hci.uni-wuerzburg.de/ontologies/2011/10/NewCoreOntology.owl">
+    <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
+    <Prefix name="owl" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="" IRI="http://www.w3.org/2002/07/owl#"/>
+    <Prefix name="rdf" IRI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+    <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
+    <Declaration>
+        <Class IRI="#Acceleration"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AccelerationFactor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ai"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Alignment"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AnalogInput"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Angle"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AngularDamping"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AngularFactor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AnimationObject"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AnyList"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Application"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Arm"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Aspect"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Attenuation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AttractorAttractionFactor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AttractorStrength"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#AudioFile"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BackTexture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Barrel"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Begin"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BodyPart"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Boolean"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#BoundingBox"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Box"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Bridge"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Button"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Button_Center"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Button_Left"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Button_Right"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Byte"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Capsule"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CastShadow"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Clipping"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Collada"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ColladaFile"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ColladaObjectId"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Collision"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#CollisionSound"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Color"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Component"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ComponentType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Configuration"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ConstantAttenuation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Container"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Cylinder"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Damage"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DiffuseColor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Direction"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DownTexture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#DrawLines"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Edge"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Editor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Enabled"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#End"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Enemy"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Entity"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EntityCreation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EntityDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Enumeration"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Event"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#EventDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ExistingNode"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Explosion"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Factor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Failure"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FarClip"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#File"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FileFormat"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fireball"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fish"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fish_Ai"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Fishtank"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FragmentShader"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Frame"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#FrontTexture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GameLogic"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Gesture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ghost"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Graph"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GraphicalAspect"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Graphics"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#GraphicsComponent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Gravity"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HalfExtends"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Hand"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Head"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#HeadTransform"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Health"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Height"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#IRI"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Iceball"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Icon1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Icon2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Icon3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Identifier"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Impulse"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Initialize"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#InputDevice"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Integer"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Intensity"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Interactions"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Interval"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Ip"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#JavaType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_0"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_1"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_4"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_5"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_6"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_7"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_8"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_9"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_Down"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_Home"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_Left"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_Minus"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_Plus"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_Right"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_Space"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_Up"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_a"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_b"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_c"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_d"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_e"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_f"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_g"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_h"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_i"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_j"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_k"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_l"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_m"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_n"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_o"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_p"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_q"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_r"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_s"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_t"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_u"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_v"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_w"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_x"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_y"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Key_z"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Keyboard"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Keyframe"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LeftTexture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LinearAttenuation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#LinearDamping"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Live"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Lives"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Local"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Long"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Mana"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ManipulatorList"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Mass"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Material"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Matrix"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MaxAccMag"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MaxAttractors"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MaxNeighbors"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MinAttractorDistance"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MinDistanceToNeighbors"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#MinDistanceToPredators"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Mirror"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Mouse"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Name"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NamedContainer"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NearClip"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Neighbor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NeighborhoodAttractionFactor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NetProduce"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Network"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Normal"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#NullType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Number"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Object"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Orientation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Origin"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ParentElement"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Particle"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysicalAspect"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysicalBox"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysicalCapsule"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysicalObject"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysicalPlane"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysicalSphere"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysicalValue"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Physics"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PhysicsComponent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Plane"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PointLight"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Port"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Position"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Position2D"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PositioningConcept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#PostProcessingEffect"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Probability"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#QuadraticAttenuation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Radius"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Real"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RefreshRate"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Remote"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Rendering_FileFormats"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Restitution"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#RightTexture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Root"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SVarDescription"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Saturation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ScalaType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Scale"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ScreenCoordinates"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Shader"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ShaderEffect"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ShadowBias"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Shape"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ShapeFromFile"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Shapes"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Shield"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ShowHeightMap"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Simplex3dType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SimulationSpeed"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SirisType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Animation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Buttons"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Concept"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Core"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_DataType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Geometry"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Gestures"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_IO"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Keyboard"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_LinearAlgebra"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Math"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Misc"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Network"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Physics"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Rendering"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_SimulationObjects"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Sound"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_Tracking"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Siris_World"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Size"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SkyBox"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SkyBoxFog"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Sound"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SoundType"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SpecularColor"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Spell"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Sphere"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SpotCutOff"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SpotExponent"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SpotLight"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#State"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#State_Changed"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Strength"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#String"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Structure"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#SubElement"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TangibleSurface"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Texture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Thickness"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Threshold"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Time"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Token"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TorqueImpulse"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TrackingTarget"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TrackingTargetId"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Transformation"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Tuio"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TuioCursorAdded"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TuioCursorRemoved"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TuioCursorUpdated"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TuioCursors"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TuioObjectAdded"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TuioObjectRemoved"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TuioObjectUpdated"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#TuioObjects"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#URL"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#UpTexture"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#UpVector"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#User"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Value"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Vector2"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Vector3"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Vector4"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Velocity"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Vertex"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#VertexShader"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#ViewPlatform"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Vrpn"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Water"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WaveScale"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Well"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#WiiMote"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#bottom"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#center"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#left"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#right"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#top"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#StateVariable"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#basedOn"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#forComponent"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#has"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasAspect"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#hasDataType"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#requires"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#defaultConstructor"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#hasConstructor"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#inPackage"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_AccelerationDescription"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_AlignmentDescription"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_EntityDescription"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_FileDescription"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_MassDescription"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_MatrixDescription"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_NullType"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_TransformationDescription"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#SirisCore_VelocityDescription"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#java.lang.String"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#scala.Float"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstMat4f"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstVec3f"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#simx.core.entity.Entity"/>
+    </Declaration>
+    <Declaration>
+        <NamedIndividual IRI="#simx.core.entity.description.Semantics"/>
+    </Declaration>
+    <SubClassOf>
+        <Class IRI="#Acceleration"/>
+        <Class IRI="#PhysicalValue"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Acceleration"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AccelerationFactor"/>
+        <Class IRI="#Acceleration"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ai"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Alignment"/>
+        <Class IRI="#PositioningConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Alignment"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AnalogInput"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Angle"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AngularDamping"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AngularFactor"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AnimationObject"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AnyList"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Application"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Arm"/>
+        <Class IRI="#BodyPart"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Arm"/>
+        <Class IRI="#Entity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Arm"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#has"/>
+            <Class IRI="#Alignment"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Aspect"/>
+        <Class IRI="#Siris_Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Attenuation"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AttractorAttractionFactor"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AttractorStrength"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#AudioFile"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BackTexture"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Barrel"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Begin"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BodyPart"/>
+        <Class IRI="#PhysicalObject"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Boolean"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#BoundingBox"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Box"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Bridge"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Button"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Button_Center"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Button_Left"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Button_Right"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Byte"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Capsule"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CastShadow"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Clipping"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Collada"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ColladaFile"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ColladaObjectId"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Collision"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#CollisionSound"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Color"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Component"/>
+        <Class IRI="#Siris_Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ComponentType"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Configuration"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ConstantAttenuation"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Container"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Cylinder"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Damage"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DiffuseColor"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Direction"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DownTexture"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#DrawLines"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Edge"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Editor"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Enabled"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#End"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Enemy"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Entity"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EntityCreation"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EntityDescription"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Enumeration"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Event"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#EventDescription"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ExistingNode"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Explosion"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Factor"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Failure"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FarClip"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#File"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FileFormat"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fireball"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fish"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fish_Ai"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Fishtank"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FragmentShader"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Frame"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#FrontTexture"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GameLogic"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Gesture"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ghost"/>
+        <Class IRI="#Entity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ghost"/>
+        <Class IRI="#PhysicalObject"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Graph"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GraphicalAspect"/>
+        <Class IRI="#Aspect"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GraphicalAspect"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#forComponent"/>
+            <Class IRI="#GraphicsComponent"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Graphics"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#GraphicsComponent"/>
+        <Class IRI="#Component"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Gravity"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HalfExtends"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hand"/>
+        <Class IRI="#BodyPart"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hand"/>
+        <Class IRI="#Entity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Hand"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#has"/>
+            <Class IRI="#Alignment"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Head"/>
+        <Class IRI="#BodyPart"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Head"/>
+        <Class IRI="#Entity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Head"/>
+        <ObjectUnionOf>
+            <ObjectExactCardinality cardinality="1">
+                <ObjectProperty IRI="#hasAspect"/>
+                <Class IRI="#PhysicalBox"/>
+            </ObjectExactCardinality>
+            <ObjectExactCardinality cardinality="1">
+                <ObjectProperty IRI="#hasAspect"/>
+                <Class IRI="#PhysicalSphere"/>
+            </ObjectExactCardinality>
+        </ObjectUnionOf>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#HeadTransform"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Health"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Height"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#IRI"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Iceball"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Icon1"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Icon2"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Icon3"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Identifier"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Impulse"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Initialize"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#InputDevice"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Integer"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Intensity"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Interactions"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Interval"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Ip"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#JavaType"/>
+        <Class IRI="#Siris_DataType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_0"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_1"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_2"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_3"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_4"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_5"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_6"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_7"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_8"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_9"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_Down"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_Home"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_Left"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_Minus"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_Plus"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_Right"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_Space"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_Up"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_a"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_b"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_c"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_d"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_e"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_f"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_g"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_h"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_i"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_j"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_k"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_l"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_m"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_n"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_o"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_p"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_q"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_r"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_s"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_t"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_u"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_v"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_w"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_x"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_y"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Key_z"/>
+        <Class IRI="#Key"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Keyboard"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Keyframe"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LeftTexture"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LinearAttenuation"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#LinearDamping"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Live"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Lives"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Local"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Long"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Mana"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ManipulatorList"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Mass"/>
+        <Class IRI="#PhysicalValue"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Mass"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Material"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Matrix"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MaxAccMag"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MaxAttractors"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MaxNeighbors"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MinAttractorDistance"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MinDistanceToNeighbors"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#MinDistanceToPredators"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Mirror"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Mouse"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Name"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NamedContainer"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NearClip"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Neighbor"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NeighborhoodAttractionFactor"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NetProduce"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Network"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Normal"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#NullType"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Number"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Object"/>
+        <Class IRI="#Siris_Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Orientation"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Origin"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ParentElement"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Particle"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalAspect"/>
+        <Class IRI="#Aspect"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalAspect"/>
+        <Class IRI="#PhysicalObject"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalAspect"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#forComponent"/>
+            <Class IRI="#PhysicsComponent"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalBox"/>
+        <Class IRI="#PhysicalAspect"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalCapsule"/>
+        <Class IRI="#PhysicalAspect"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalObject"/>
+        <Class IRI="#Object"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalObject"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#has"/>
+            <Class IRI="#Acceleration"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalObject"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#has"/>
+            <Class IRI="#Mass"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalObject"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#has"/>
+            <Class IRI="#Transformation"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalObject"/>
+        <ObjectExactCardinality cardinality="1">
+            <ObjectProperty IRI="#has"/>
+            <Class IRI="#Velocity"/>
+        </ObjectExactCardinality>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalPlane"/>
+        <Class IRI="#PhysicalAspect"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalSphere"/>
+        <Class IRI="#PhysicalAspect"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicalValue"/>
+        <Class IRI="#Value"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Physics"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PhysicsComponent"/>
+        <Class IRI="#Component"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Plane"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PointLight"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Port"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Position"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Position2D"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PositioningConcept"/>
+        <Class IRI="#Siris_Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#PostProcessingEffect"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Probability"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#QuadraticAttenuation"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Radius"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Real"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RefreshRate"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Remote"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Rendering_FileFormats"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Restitution"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#RightTexture"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Root"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SVarDescription"/>
+        <Class IRI="#Siris_Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SVarDescription"/>
+        <ObjectUnionOf>
+            <ObjectExactCardinality cardinality="1">
+                <ObjectProperty IRI="#basedOn"/>
+                <Class IRI="#SVarDescription"/>
+            </ObjectExactCardinality>
+            <ObjectExactCardinality cardinality="1">
+                <ObjectProperty IRI="#hasDataType"/>
+                <Class IRI="#Siris_DataType"/>
+            </ObjectExactCardinality>
+        </ObjectUnionOf>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SVarDescription"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#forComponent"/>
+            <Class IRI="#Component"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Saturation"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ScalaType"/>
+        <Class IRI="#Siris_DataType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Scale"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ScreenCoordinates"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shader"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ShaderEffect"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ShadowBias"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shape"/>
+        <Class IRI="#GraphicalAspect"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shape"/>
+        <ObjectUnionOf>
+            <ObjectExactCardinality cardinality="1">
+                <ObjectProperty IRI="#has"/>
+                <Class IRI="#Entity"/>
+            </ObjectExactCardinality>
+            <ObjectExactCardinality cardinality="1">
+                <ObjectProperty IRI="#has"/>
+                <Class IRI="#File"/>
+            </ObjectExactCardinality>
+        </ObjectUnionOf>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ShapeFromFile"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shapes"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Shield"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ShowHeightMap"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Simplex3dType"/>
+        <Class IRI="#Siris_DataType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SimulationSpeed"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SirisType"/>
+        <Class IRI="#Siris_DataType"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Animation"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Buttons"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Core"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_DataType"/>
+        <Class abbreviatedIRI=":Thing"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Geometry"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Gestures"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_IO"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Keyboard"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_LinearAlgebra"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Math"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Misc"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Network"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Physics"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Rendering"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_SimulationObjects"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Sound"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_Tracking"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Siris_World"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Size"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SkyBox"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SkyBoxFog"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Sound"/>
+        <Class IRI="#Entity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SoundType"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SpecularColor"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Spell"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Sphere"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SpotCutOff"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SpotExponent"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SpotLight"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#State"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#State_Changed"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Strength"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#String"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Structure"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#SubElement"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TangibleSurface"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Texture"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Thickness"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Threshold"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Time"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Token"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TorqueImpulse"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TrackingTarget"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TrackingTargetId"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Transformation"/>
+        <Class IRI="#PositioningConcept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Transformation"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Tuio"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TuioCursorAdded"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TuioCursorRemoved"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TuioCursorUpdated"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TuioCursors"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TuioObjectAdded"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TuioObjectRemoved"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TuioObjectUpdated"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#TuioObjects"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#URL"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#UpTexture"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#UpVector"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#User"/>
+        <Class IRI="#Entity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#User"/>
+        <Class IRI="#PhysicalObject"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#User"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#has"/>
+            <Class IRI="#Arm"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#User"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#has"/>
+            <Class IRI="#Hand"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#User"/>
+        <ObjectSomeValuesFrom>
+            <ObjectProperty IRI="#has"/>
+            <Class IRI="#Head"/>
+        </ObjectSomeValuesFrom>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Value"/>
+        <Class IRI="#Siris_Concept"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Vector2"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Vector3"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Vector4"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Velocity"/>
+        <Class IRI="#PhysicalValue"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Velocity"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Vertex"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#VertexShader"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#ViewPlatform"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Vrpn"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Water"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WaveScale"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Well"/>
+        <Class IRI="#Entity"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#Well"/>
+        <Class IRI="#PhysicalObject"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#WiiMote"/>
+        <Class IRI="#SVarDescription"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#bottom"/>
+        <Class IRI="#Alignment"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#center"/>
+        <Class IRI="#Alignment"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#left"/>
+        <Class IRI="#Alignment"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#right"/>
+        <Class IRI="#Alignment"/>
+    </SubClassOf>
+    <SubClassOf>
+        <Class IRI="#top"/>
+        <Class IRI="#Alignment"/>
+    </SubClassOf>
+    <ClassAssertion>
+        <Class IRI="#Acceleration"/>
+        <NamedIndividual IRI="#SirisCore_AccelerationDescription"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Alignment"/>
+        <NamedIndividual IRI="#SirisCore_AlignmentDescription"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Component"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Entity"/>
+        <NamedIndividual IRI="#SirisCore_EntityDescription"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#File"/>
+        <NamedIndividual IRI="#SirisCore_FileDescription"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Mass"/>
+        <NamedIndividual IRI="#SirisCore_MassDescription"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Matrix"/>
+        <NamedIndividual IRI="#SirisCore_MatrixDescription"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Transformation"/>
+        <NamedIndividual IRI="#SirisCore_TransformationDescription"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Velocity"/>
+        <NamedIndividual IRI="#SirisCore_VelocityDescription"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#JavaType"/>
+        <NamedIndividual IRI="#java.lang.String"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#ScalaType"/>
+        <NamedIndividual IRI="#scala.Float"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Simplex3dType"/>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstMat4f"/>
+    </ClassAssertion>
+    <ClassAssertion>
+        <Class IRI="#Simplex3dType"/>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstVec3f"/>
+    </ClassAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#forComponent"/>
+        <NamedIndividual IRI="#SirisCore_AccelerationDescription"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasDataType"/>
+        <NamedIndividual IRI="#SirisCore_AccelerationDescription"/>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstVec3f"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#forComponent"/>
+        <NamedIndividual IRI="#SirisCore_AlignmentDescription"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasDataType"/>
+        <NamedIndividual IRI="#SirisCore_AlignmentDescription"/>
+        <NamedIndividual IRI="#simx.core.entity.description.Semantics"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#forComponent"/>
+        <NamedIndividual IRI="#SirisCore_EntityDescription"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasDataType"/>
+        <NamedIndividual IRI="#SirisCore_EntityDescription"/>
+        <NamedIndividual IRI="#simx.core.entity.Entity"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#forComponent"/>
+        <NamedIndividual IRI="#SirisCore_FileDescription"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasDataType"/>
+        <NamedIndividual IRI="#SirisCore_FileDescription"/>
+        <NamedIndividual IRI="#java.lang.String"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#forComponent"/>
+        <NamedIndividual IRI="#SirisCore_MassDescription"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasDataType"/>
+        <NamedIndividual IRI="#SirisCore_MassDescription"/>
+        <NamedIndividual IRI="#scala.Float"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#forComponent"/>
+        <NamedIndividual IRI="#SirisCore_MatrixDescription"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasDataType"/>
+        <NamedIndividual IRI="#SirisCore_MatrixDescription"/>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstMat4f"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#basedOn"/>
+        <NamedIndividual IRI="#SirisCore_NullType"/>
+        <NamedIndividual IRI="#SirisCore_NullType"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#forComponent"/>
+        <NamedIndividual IRI="#SirisCore_NullType"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#basedOn"/>
+        <NamedIndividual IRI="#SirisCore_TransformationDescription"/>
+        <NamedIndividual IRI="#SirisCore_MatrixDescription"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#forComponent"/>
+        <NamedIndividual IRI="#SirisCore_TransformationDescription"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#forComponent"/>
+        <NamedIndividual IRI="#SirisCore_VelocityDescription"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+    </ObjectPropertyAssertion>
+    <ObjectPropertyAssertion>
+        <ObjectProperty IRI="#hasDataType"/>
+        <NamedIndividual IRI="#SirisCore_VelocityDescription"/>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstVec3f"/>
+    </ObjectPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasConstructor"/>
+        <NamedIndividual IRI="#SirisCore_AccelerationDescription"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">simplex3d.math.floatm.Vec3f.Zero</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasConstructor"/>
+        <NamedIndividual IRI="#SirisCore_AlignmentDescription"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Symbols.center.value</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#inPackage"/>
+        <NamedIndividual IRI="#SirisCore_CoreComponent"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">simx.core</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasConstructor"/>
+        <NamedIndividual IRI="#SirisCore_EntityDescription"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">new simx.core.entity.Entity()</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasConstructor"/>
+        <NamedIndividual IRI="#SirisCore_FileDescription"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">new String(&quot;&quot;)</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasConstructor"/>
+        <NamedIndividual IRI="#SirisCore_MassDescription"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">0f</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasConstructor"/>
+        <NamedIndividual IRI="#SirisCore_MatrixDescription"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">simplex3d.math.floatm.Mat4f.Identity</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasConstructor"/>
+        <NamedIndividual IRI="#SirisCore_TransformationDescription"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">simplex3d.math.floatm.Mat4f.Identity</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#hasConstructor"/>
+        <NamedIndividual IRI="#SirisCore_VelocityDescription"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">simplex3d.math.floatm.Vec3f.Zero</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#defaultConstructor"/>
+        <NamedIndividual IRI="#java.lang.String"/>
+        <Literal datatypeIRI="&xsd;string">new String(&quot;&quot;)</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#inPackage"/>
+        <NamedIndividual IRI="#java.lang.String"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">java.lang</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#inPackage"/>
+        <NamedIndividual IRI="#scala.Float"/>
+        <Literal datatypeIRI="&xsd;string">scala</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#defaultConstructor"/>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstMat4f"/>
+        <Literal datatypeIRI="&xsd;string">ConstMat4f.Identity</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#inPackage"/>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstMat4f"/>
+        <Literal datatypeIRI="&xsd;string">simplex3d.math.floatm</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#defaultConstructor"/>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstVec3f"/>
+        <Literal datatypeIRI="&xsd;string">Vec3.Zero</Literal>
+    </DataPropertyAssertion>
+    <DataPropertyAssertion>
+        <DataProperty IRI="#inPackage"/>
+        <NamedIndividual IRI="#simplex3d.math.floatm.ConstVec3f"/>
+        <Literal datatypeIRI="&xsd;string">simplex3d.math.floatm</Literal>
+    </DataPropertyAssertion>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#StateVariable"/>
+        <Class IRI="#Aspect"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#basedOn"/>
+        <Class IRI="#Siris_Concept"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#forComponent"/>
+        <Class IRI="#Siris_Concept"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#has"/>
+        <Class IRI="#Entity"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasAspect"/>
+        <Class IRI="#Entity"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasDataType"/>
+        <Class IRI="#SVarDescription"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#requires"/>
+        <Class IRI="#Aspect"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#StateVariable"/>
+        <Class IRI="#SVarDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#basedOn"/>
+        <Class IRI="#Siris_Concept"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#forComponent"/>
+        <Class IRI="#Component"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#has"/>
+        <Class IRI="#SVarDescription"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasAspect"/>
+        <Class IRI="#Aspect"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasDataType"/>
+        <Class IRI="#Siris_DataType"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#requires"/>
+        <Class IRI="#SVarDescription"/>
+    </ObjectPropertyRange>
+    <DataPropertyDomain>
+        <DataProperty IRI="#defaultConstructor"/>
+        <Class IRI="#Siris_DataType"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#hasConstructor"/>
+        <Class IRI="#SVarDescription"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#inPackage"/>
+        <ObjectUnionOf>
+            <Class IRI="#Component"/>
+            <Class IRI="#Siris_DataType"/>
+        </ObjectUnionOf>
+    </DataPropertyDomain>
+    <DataPropertyRange>
+        <DataProperty IRI="#defaultConstructor"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#hasConstructor"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#inPackage"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+</Ontology>
+
+
+
+<!-- Generated by the OWL API (version 3.2.3.1824) http://owlapi.sourceforge.net -->
+
