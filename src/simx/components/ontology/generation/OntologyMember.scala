@@ -57,14 +57,14 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
     if (isEntity) "class " + getName + "( e : Entity, a : SVarActor ) extends Entity(e)(a) " else ""
 
   def getSVarDescriptions : Map[String, String] = {
-    val initialMap =
-      if (isEntity)
+
+      if (isEntity /*&& getIndividuals.isEmpty*/)
         Map[String, String]("simx.core.ontology" -> getEntitySVarDescription)
       else
-        Map[String, String]()
-    getIndividuals.foldLeft(initialMap){
-      (m, i) => m.updated(getTargetComponent(i) + ".ontology", if (isEntity) getEntitySVarDescription else getSVarDescription(i))
-    }
+        getIndividuals.foldLeft(Map[String, String]()) {
+          (m, i) => m.updated(getTargetComponent(i) + ".ontology", /*if (isEntity) getEntitySVarDescription else*/ getSVarDescription(i))
+        }
+
   }
 
   def getEntityDescription : String =
