@@ -18,10 +18,11 @@
  * Federal Ministry of Education and Research (grant no. 17N4409).
  */
 
-package simx.components.ontology.generation
+package simx.components.ontology.generation.helper
+
+import java.io.File
 
 import scala.io.Source
-import java.io.File
 
 /**
  * Created by IntelliJ IDEA.

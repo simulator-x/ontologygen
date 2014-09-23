@@ -18,9 +18,12 @@
  * Federal Ministry of Education and Research (grant no. 17N4409).
  */
 
-package simx.components.ontology.generation
+package simx.components.ontology.generation.member
 
 import org.semanticweb.owlapi.model._
+import simx.components.ontology.generation.OntoGenTwo
+import simx.components.ontology.generation.helper.DescriptionStub
+
 import scala.collection.JavaConversions.asScalaSet
 
 
@@ -42,48 +45,36 @@ object OntologyMember{
 
   def apply( key : OWLIndividual) : Option[OntologyMember] =
     registry.get(key)
+
+  def apply(owlClass : OWLClass, o : OntoGenTwo ) =
+    if ( o.getSuperClasses(owlClass).contains(o.getEntityClass) )
+      new OntologyEntityDescription(owlClass)(o)
+    else if ( o.getSuperClasses(owlClass).contains(o.getRelationClass) )
+      new OntologyRelationDescription(owlClass)(o)
+    else
+      new OntologySVarDescription(owlClass)(o)
 }
 
-class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
+abstract class OntologyMember( val owlClass : OWLClass)(implicit o : OntoGenTwo ) extends Writable{
   getIndividuals.foreach( OntologyMember.register(_, this) )
+
+  def isEntity : Boolean
+
+  def getEntityString : Option[String]
+
+  def getEntityDescription : Option[String]
+
+  def getSVarDescriptions : Map[String, String]
 
   def getName : String =
     owlClass.toStringID.replaceAll(".*#", "")
 
-  def getSymbolString : String =
-    "val " + deCap(getName) + " = OntologySymbol(Symbol(\"" + getName + "\"))"
-
-  def getEntityString : String =
-    if (isEntity) "class " + getName + "( e : Entity, a : SVarActor ) extends Entity(e)(a) " else ""
-
-  def getSVarDescriptions : Map[String, String] = {
-
-      if (isEntity /*&& getIndividuals.isEmpty*/)
-        Map[String, String]("simx.core.ontology" -> getEntitySVarDescription)
-      else
-        getIndividuals.foldLeft(Map[String, String]()) {
-          (m, i) => m.updated(getTargetComponent(i) + ".ontology", /*if (isEntity) getEntitySVarDescription else*/ getSVarDescription(i))
-        }
-
-  }
-
-  def getEntityDescription : String =
-    if (isEntity)
-      "case class " + getName + "EntityDescription( asps : EntityAspect* ) " +
-        "extends SpecificDescription(ontology.types." + getName + ", asps.toList" +
-        getDescriptionStub.collect{ case stub => ", " + stub.getFeatureString }.getOrElse("") +
-        ")"
-    else ""
-
-  private def getDescriptionStub : Option[DescriptionStub] =
+  protected def getDescriptionStub : Option[DescriptionStub] =
     o.getAnonymousSuperClasses(owlClass).map( handleAnonymousSuperClass ).foldLeft(None : Option[DescriptionStub]){
       (a, b) => b.merge(a.getOrElse(DescriptionStub()))
     }
 
-  def getFullName : String =
-    "simx.core.ontology.types." + getName
-
-  def getEntityName : String =
+  protected def getEntityName : String =
     "simx.core.ontology.entities." + getName
 
   private def createStub(prop : OWLObjectPropertyExpression, value : OWLClass, in : DescriptionStub) =
@@ -164,19 +155,10 @@ class OntologyMember ( val owlClass : OWLClass, o : OntoGenTwo ){
   protected def getDataType( i : OWLIndividual ) : Option[OWLIndividual] =
     o.getObjectProperties(i)(o.getDataTypeProp).headOption
 
-  def isEntity : Boolean =
-    o.getSuperClasses(owlClass).contains(o.getEntityClass)
+  protected def isRelation : Boolean
 
   protected def generatesSVar( i : OWLIndividual ) : Boolean =
     getIndividuals.nonEmpty
-
-  protected def deCap( s : String ) : String =
-    if (s.length() < 2) s.toLowerCase else s.charAt(0).toLower + s.substring(1)
-
-  override def toString =
-    "OntologyMember " + getName + ":\n--------------------------------------------\n" +
-      "Symbol:\n\t" + getSymbolString + "\n" + "Descriptions:\n\t" + getSVarDescriptions.mkString("\n\t") +
-      (if (isEntity) "\nAssocEntity:\n\t" + getEntityString + "\nEntityDescription:\n\t" + getEntityDescription else "")
 
   override def equals(p1: Any) = p1 match {
     case that : OntologyMember => that.owlClass.equals(owlClass)

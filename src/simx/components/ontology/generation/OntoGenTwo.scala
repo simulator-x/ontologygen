@@ -23,40 +23,12 @@ package simx.components.ontology.generation
 import org.semanticweb.owlapi.apibinding.OWLManager
 import org.semanticweb.owlapi.util.DefaultPrefixManager
 import org.semanticweb.owlapi.model._
-import collection.JavaConversions.asScalaSet
 import org.slf4j.LoggerFactory
+import simx.components.ontology.generation.helper.{OntologyException, OWLFunctions, OntoIO}
+import simx.components.ontology.generation.member.{SimXRelation, OntologyMember}
+import collection.JavaConversions.asScalaSet
 import java.io.{FileWriter, BufferedWriter, File}
-import scala.io.Source
 
-/**
- * @author dwiebusch
- * Date: 20.09.11
- * Time: 18:11
- */
-
-case class OntologyException(reason : String) extends Exception(reason)
-
-object OntoGenSimxOntology {
-  /**
-   * Generates Symbols, SVarDescriptions, and EntityDescriptions
-   * from an ontology for a SimXApplication.
-   * @param args Requires two space-separated strings: < SimX base directory > < SimXApplication working directory >
-   */
-  def main(args: Array[String]) {
-    val base = args.toList.headOption.
-      getOrElse(throw new Exception(
-      "[error][Ontology Generation] No simx base directory in program arguments."))
-    val wd = args.toList.tail.headOption.
-      getOrElse(throw new Exception(
-      "[error][Ontology Generation] No working directory in program arguments."))
-    val p = new OntoGenTwo(base)
-    val simxOntologyFile = new File(wd + "/simxOntology.owl")
-    if(!simxOntologyFile.exists())
-      throw new Exception("[error][Ontology Generation] No 'simxOntology.owl' found in " + wd)
-    p.load(simxOntologyFile)
-    p.parse()
-  }
-}
 
 object OntoGenTwo{
   def main( args : Array[String]){
@@ -65,15 +37,6 @@ object OntoGenTwo{
     p.load(url)
     p.parse()
   }
-
-  def getName( iri : IRI ) : String =
-    iri.toString.replaceAll(".*#", "")
-
-  def getName( entity : OWLEntity ) : String =
-    entity.toStringID.replaceAll(".*#", "")
-
-  def getName( individual : OWLIndividual ) : String =
-    getName(individual.asOWLNamedIndividual : OWLEntity)
 
   def apply[T](self : T, onlyForComponent : Option[String] = None) : OntoGenTwo = self match {
     case c : Class[_] => getInstance(c,  onlyForComponent)
@@ -95,6 +58,7 @@ object OntoGenTwo{
 }
 
 class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None) extends OntoIO {
+  private implicit val parser = this
   private val log = LoggerFactory.getLogger(this.asInstanceOf[Object].getClass)
 
   //internal variables
@@ -136,11 +100,28 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
     else
       init()
 
-    val members           = collectMembers(baseClass.get)
+    val members           = collectMembers(baseClass.get) ++ SimXRelation.parse(ontology.get)
+    val actionList        = collectActions(actionClass.get).flatMap(getIndividuals)
     var symbolsList       = collectMembers(getOWLClass(symbolsBase).get).map(m => m.getSymbolString)
     var svarDescLists     = Map[String, List[String]]()
     var entityStringList  = List[String]()
     var entityDescList    = List[String]()
+
+    //println(actionList.map(new OntologyAction(_)))
+
+    //    ontology.foreach(o => {
+    //      members.map(_.owlClass).foreach( m1 => {
+    //        val olo = manager.getOWLDataFactory.
+    //          getOWLObjectSomeValuesFrom(
+    //            manager.getOWLDataFactory.getOWLObjectProperty("supports_calculation_of", prefixManager.get),
+    //            m1
+    //          )
+    //        members.map(_.owlClass).foreach( m2 => {
+    //          if(m2.getSuperClasses(ontology.get).toList.contains(olo))
+    //            println(m2, olo)
+    //        })
+    //      })
+    //    })
 
     members.foreach{ m =>
       log.info( m + "\n" )
@@ -149,10 +130,8 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
       m.getSVarDescriptions.foreach{ desc =>
         svarDescLists = svarDescLists.updated(desc._1, desc._2 :: svarDescLists.getOrElse(desc._1, Nil))
       }
-      if (m.isEntity){
-        entityStringList = m.getEntityString :: entityStringList
-        entityDescList = m.getEntityDescription :: entityDescList
-      }
+      m.getEntityString.collect { case str => entityStringList = str :: entityStringList }
+      m.getEntityDescription.collect{ case str => entityDescList = str :: entityDescList }
     }
 
     if (onlyForComponent.isEmpty){
@@ -163,8 +142,8 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
     svarDescLists.foreach{ t =>
       if (onlyForComponent.collect{ case comp => comp equals t._1}.getOrElse(true)){
         val out = corePath + File.separator +
-            t._1.replaceFirst("simx.", "").replaceAll("\\.ontology", "" ).replaceAll("\\.", File.separator) +
-            File.separator + "src" + File.separator + t._1.replaceAll("\\.", File.separator) + "/types/package.scala"
+          t._1.replaceFirst("simx.", "").replace(".ontology", "" ).replace(".", File.separator) +
+          File.separator + "src" + File.separator + t._1.replace(".", File.separator) + "/types/package.scala"
         write(out, typesHeader("package " + t._1) + interleave(t._2.sorted, 7).mkString("\n\t") + "\n}" )
       }
     }
@@ -193,19 +172,33 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
 
   protected def collectMembers( c : OWLClass, prev : Set[OntologyMember] = Set() ) : Set[OntologyMember] =
     prev ++ asScalaSet(c.getSubClasses(manager.getOntologies)).flatMap{
-      c => collectMembers(c.asOWLClass, Set(new OntologyMember(c.asOWLClass(), this)))
+      c => collectMembers(c.asOWLClass, Set(OntologyMember(c.asOWLClass(), this)))
     }
 
+  protected def collectActions( c : OWLClass) : Set[OWLClass] =
+    asScalaSet(c.getSubClasses(manager.getOntologies)).flatMap(x => collectActions(x.asOWLClass())).toSet + c
+
   private var baseClass : Option[OWLClass] = None
+  private var effectClass : Option[OWLClass] = None
   private var entityClass : Option[OWLClass] = None
+  private var actionClass : Option[OWLClass] = None
+  private var relationClass : Option[OWLClass] = None
+  private var preconditionClass : Option[OWLClass] = None
   private var nullType : Option[OWLIndividual] = None
   private var ctorProp : Option[OWLDataProperty] = None
   private var inPackageProp : Option[OWLDataProperty] = None
+  private var hasRoleProp   : Option[OWLObjectProperty] = None
+  private var hasEffectProp : Option[OWLObjectProperty] = None
   private var hasAObjectProp : Option[OWLObjectProperty] = None
   private var baseObjectProp : Option[OWLObjectProperty] = None
+  private var isObjectOfProp : Option[OWLObjectProperty] = None
+  private var describedByProp : Option[OWLObjectProperty] = None
+  private var isSubjectOfProp : Option[OWLObjectProperty] = None
+  private var hasParameterProp : Option[OWLObjectProperty] = None
   private var forCompObjectProp : Option[OWLObjectProperty] = None
   private var dataTypeObjectProp : Option[OWLObjectProperty] = None
   private var hasAspectObjectProp : Option[OWLObjectProperty] = None
+  private var hasPreconditionProp : Option[OWLObjectProperty] = None
 
 
   private def init() {
@@ -219,18 +212,34 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
       case c => c.getIndividuals(manager.getOntologies).iterator().next()
     }
     entityClass         = getOWLClass("Entity")
+    effectClass         = getOWLClass("Effect")
+    relationClass       = getOWLClass("Relation")
+    preconditionClass   = getOWLClass("Precondition")
     baseClass           = getOWLClass(baseName)
-    hasAObjectProp      = objectProps.find( OntoGenTwo.getName(_) equals has_a )
-    baseObjectProp      = objectProps.find( OntoGenTwo.getName(_) equals basedOn )
-    hasAspectObjectProp = objectProps.find( OntoGenTwo.getName(_) equals hasAspect )
-    dataTypeObjectProp  = objectProps.find( OntoGenTwo.getName(_) equals hasDataType )
-    forCompObjectProp   = objectProps.find( OntoGenTwo.getName(_) equals forComponent )
-    inPackageProp       = dataProps.find( OntoGenTwo.getName(_) equals inPackage )
-    ctorProp            = dataProps.find( OntoGenTwo.getName(_) equals hasConstructor )
+    actionClass         = getOWLClass(actionIRI)
+    hasAObjectProp      = objectProps.find( OWLFunctions.getName(_) equals has_a )
+    baseObjectProp      = objectProps.find( OWLFunctions.getName(_) equals basedOn )
+    hasAspectObjectProp = objectProps.find( OWLFunctions.getName(_) equals hasAspect )
+    hasPreconditionProp = objectProps.find( OWLFunctions.getName(_) equals hasPrecondition )
+    dataTypeObjectProp  = objectProps.find( OWLFunctions.getName(_) equals hasDataType )
+    forCompObjectProp   = objectProps.find( OWLFunctions.getName(_) equals forComponent )
+    hasParameterProp    = objectProps.find( OWLFunctions.getName(_) equals hasParameter )
+    describedByProp     = objectProps.find( OWLFunctions.getName(_) equals describedBy )
+    isSubjectOfProp     = objectProps.find( OWLFunctions.getName(_) equals isSubjectOf )
+    isObjectOfProp      = objectProps.find( OWLFunctions.getName(_) equals isObjectOf )
+    hasEffectProp       = objectProps.find( OWLFunctions.getName(_) equals hasEffect )
+    hasRoleProp         = objectProps.find( OWLFunctions.getName(_) equals hasRole )
+    inPackageProp       = dataProps.find( OWLFunctions.getName(_) equals inPackage )
+    ctorProp            = dataProps.find( OWLFunctions.getName(_) equals hasConstructor )
   }
 
   protected def getOWLClass( name : String ) : Option[OWLClass] = ontology match {
     case Some(o) => o.getClassesInSignature(true).toArray(Array[OWLClass]()).find( _.toStringID.endsWith("#"+name))
+    case None => None
+  }
+
+  protected def getOWLClass( iri : IRI ) : Option[OWLClass] = ontology match {
+    case Some(o) => o.getClassesInSignature(true).toArray(Array[OWLClass]()).find( _.getIRI.equals(iri) )
     case None => None
   }
 
@@ -239,6 +248,18 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
 
   def getEntityClass : OWLClass =
     entityClass.get
+
+  def getPreconditionClass : OWLClass =
+    preconditionClass.get
+
+  def getEffectClass : OWLClass =
+    effectClass.get
+
+  def getActionClass : OWLClass =
+    actionClass.get
+
+  def getRelationClass : OWLClass =
+    relationClass.get
 
   def getBasedOnProp : OWLObjectPropertyExpression =
     baseObjectProp.get
@@ -260,6 +281,27 @@ class OntoGenTwo(val corePath : String, onlyForComponent : Option[String] = None
 
   def getHasAspectObjectProp : OWLObjectProperty =
     hasAspectObjectProp.get
+
+  def getHasPreconditionProp : OWLObjectProperty =
+    hasPreconditionProp.get
+
+  def getHasParameterProp : OWLObjectProperty =
+    hasParameterProp.get
+
+  def getDescribedByProp : OWLObjectProperty =
+    describedByProp.get
+
+  def getIsSubjectOfProp : OWLObjectProperty =
+    isSubjectOfProp.get
+
+  def getIsObjectOfProp : OWLObjectProperty =
+    isObjectOfProp.get
+
+  def getHasEffectProp : OWLObjectProperty =
+    hasEffectProp.get
+
+  def getHasRoleProp : OWLObjectProperty =
+    hasRoleProp.get
 
   def getSuperClasses( of : OWLClass, recurse : Boolean = true ) : Set[OWLClassExpression] = {
     val direct = asScalaSet(of.getSuperClasses(manager.getOntologies)).toSet

@@ -18,9 +18,10 @@
  * Federal Ministry of Education and Research (grant no. 17N4409).
  */
 
-package simx.components.ontology.generation
+package simx.components.ontology.generation.helper
 
 import org.semanticweb.owlapi.model.OWLClass
+import simx.components.ontology.generation.member.OntologyMember
 
 
 /**
@@ -48,7 +49,7 @@ case class DescriptionStub(has          : List[OWLClass]          = Nil,
 
   override def toString =
     "DescriptionStub" +
-      (if (has.nonEmpty) " providing " + has.map(OntoGenTwo.getName).mkString(", ")  else "") +
-      (if (hasAspect.nonEmpty) " with aspects " + hasAspect.map(OntoGenTwo.getName).mkString(", ") else "") +
+      (if (has.nonEmpty) " providing " + has.map(OWLFunctions.getName).mkString(", ")  else "") +
+      (if (hasAspect.nonEmpty) " with aspects " + hasAspect.map(OWLFunctions.getName).mkString(", ") else "") +
       (if (oneOf.nonEmpty) " with one of (" + oneOf.mkString(", ") + ")" else "")
 }

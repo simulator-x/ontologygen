@@ -18,9 +18,11 @@
  * Federal Ministry of Education and Research (grant no. 17N4409).
  */
 
-package simx.components.ontology.generation
+package simx.components.ontology.generation.helper
 
 import java.io.File
+
+import org.semanticweb.owlapi.model.IRI
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,6 +38,15 @@ trait OntoDefinitions {
   protected val hasConstructor = "hasConstructor"
   protected val forComponent = "forComponent"
   protected val hasDataType = "hasDataType"
+
+  protected val hasPrecondition = "hasPrecondition"
+  protected val hasParameter = "hasParameter"
+  protected val describedBy = "describedBy"
+  protected val isSubjectOf = "isSubjectOf"
+  protected val isObjectOf = "isObjectOf"
+  protected val hasEffect = "hasEffect"
+  protected val hasRole = "hasRole"
+
   protected val inPackage = "inPackage"
   protected val hasAspect = "hasAspect"
   protected val basedOn = "basedOn"
@@ -43,10 +54,11 @@ trait OntoDefinitions {
 
   //shortcuts
   val symbolsBase = "Concept"
-  val baseName = "SVarDescription"
-  val oSymbol  = "OntologySymbol"
-  val oMember  = "SVarDescription"
-  val nullName = "nullType"
+  val baseName    = "SVarDescription"
+  val oSymbol     = "OntologySymbol"
+  val oMember     = "SVarDescription"
+  val nullName    = "nullType"
+  val actionIRI   = IRI.create("http://www.hci.uni-wuerzburg.de/ontologies/simx/SimxCoreOntology.owl#Action")
 
   protected val outPkg        = ".ontology.types"
   protected val outFileNames  = "package.scala"

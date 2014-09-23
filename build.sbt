@@ -2,10 +2,12 @@ scalaSource in Compile <<= baseDirectory(_ / "src")
 
 unmanagedJars in Compile <<= baseDirectory map { base => ((base ** "lib") ** "*.jar").classpath }
 
+unmanagedClasspath in Compile += baseDirectory.value / "config" 
+
 autoCompilerPlugins := true
 
 libraryDependencies <<= (scalaVersion, libraryDependencies) { (ver, deps) =>
-    deps :+ compilerPlugin("org.scala-lang.plugins" % "scala-continuations-plugin_2.11.0" % "1.0.1")
+    deps :+ compilerPlugin("org.scala-lang.plugins" % "scala-continuations-plugin_2.11.2" % "1.0.2")
 }
 
 ivyXML := scala.xml.XML.load( ontologyGen.base + "/ivy.xml" ) \ "dependencies"
