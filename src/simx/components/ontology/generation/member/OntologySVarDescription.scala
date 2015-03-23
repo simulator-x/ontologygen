@@ -20,32 +20,91 @@
 
 package simx.components.ontology.generation.member
 
-import org.semanticweb.owlapi.model.OWLClass
+import org.semanticweb.owlapi.model.{OWLIndividual, OWLClass}
 import simx.components.ontology.generation.OntoGenTwo
+import simx.components.ontology.generation.helper.{Infix, Prefix, OWLFunctions, WritableForPackage}
 
 /**
  * Created by dwiebusch on 01.09.14
  */
 class OntologySVarDescription(override val owlClass : OWLClass)(implicit o : OntoGenTwo )
   extends OntologyMember(owlClass)(o){
-     def getEntityString : Option[String] =
-       None
 
-     override protected def isRelation: Boolean =
-       false
 
-     override def isEntity: Boolean =
-       false
+  def toSVarDesc(pkg: String)(scalaCode: String) = new WritableForPackage {
+    def packageName: String = pkg
+    def toScalaCode: String = scalaCode
+  }
 
-     def getSVarDescriptions : Map[String, String] =
-       getIndividuals.foldLeft(Map[String, String]()) {
-         (m, i) => m.updated(getTargetComponent(i) + ".ontology", /*if (isEntity) getEntitySVarDescription else*/ getSVarDescription(i))
-       }
+  override def getSVarDescriptions = getIndividuals.map(getSVarDescriptionsFor).flatten.toList
 
-     def getEntityDescription : Option[String] =
-       None
+  override def toString =
+    "OntologyMember " + getName + ":\n--------------------------------------------\n" +
+      "Symbol:\n\t" + getSymbolString + "\n" + "Descriptions:\n\t" + getSVarDescriptions.mkString("\n\t")
 
-     override def toString =
-       "OntologyMember " + getName + ":\n--------------------------------------------\n" +
-         "Symbol:\n\t" + getSymbolString + "\n" + "Descriptions:\n\t" + getSVarDescriptions.mkString("\n\t")
-   }
+  //TODO: Why is this called twice?
+  private def getSVarDescriptionsFor( i : OWLIndividual ) : List[WritableForPackage] = {
+    import OntologyMember._
+
+    val describedClasses = getDescribedClasses(i).filterNot{ cls => o.getSuperClasses(cls).contains(o.getEntityClass) }
+    if (describedClasses.isEmpty)
+      return Nil
+
+
+    val baseDesc = getBase(i) match {
+      case Some(b) if OntologyMember(b).isDefined =>
+        getTargetComponent(getBase(i).get) + ".ontology.types."+ OWLFunctions.getName(getDescribedClasses(b).head)  //OntologyMember(b).get.getName
+      case _ =>
+        OntologyMember.nullTypeClassName
+    }
+
+    describedClasses.map{cls =>
+      val semantic = "simx.core.ontology.Symbols." + deCap(OWLFunctions.getName(cls))
+
+      val iriString = "\"" + cls.toStringID + "\""
+
+      val superDesc = typeString(i) match {
+        case Some(typ) =>
+          sVarDescClassName + "(" + baseDesc + " as " + semantic + " withType " + typ + " definedAt " + iriString + ")"
+        case None =>
+          sVarDescClassName + "(" + baseDesc + " as " + semantic + " definedAt " + iriString + ")"
+      }
+
+      val clsName = OWLFunctions.getName(cls)
+
+      val prefixFunctions: Set[PlainFunction] = o.members.map{ m =>
+        m.getFunctions.filter{ f =>
+          (f.getReturnValue.get == cls) && f.getOperatorType.isInstanceOf[Prefix]
+        }
+      }.flatten
+
+      val infixFunctions: Set[PlainFunction] = o.members.map{ m =>
+        m.getFunctions.filter{ f =>
+          (f.getParameters.head._2 == cls) && f.getOperatorType.isInstanceOf[Infix]
+        }
+      }.flatten
+
+      val sVarConstructorCode =
+        OWLFunctions.indentAllLines(1)("override def apply(value: dataType) = new " + clsName + "(value)") + "\n"
+
+      def functionCode(functions :Set[PlainFunction]) =
+        if(functions.isEmpty) ""
+        else OWLFunctions.indentAllLines(1)(functions.map(_.getSVarDescriptionCode).mkString("\n")) + "\n"
+
+      val objectCode =
+        "object " + clsName + " extends " + superDesc +
+        " {\n" + sVarConstructorCode + functionCode(prefixFunctions) + "}"
+
+      val classCode =
+        "class " + clsName + "(private val _value : " + clsName + ".dataType) extends SVal(_value, " + clsName + ".valueDescription, " + clsName + ")" +
+        (if(infixFunctions.nonEmpty) " {\n" + functionCode(infixFunctions) + "}" else "")
+
+      val code = objectCode + "\n" + classCode
+
+      new WritableForPackage {
+        def packageName: String = getTargetComponent(i)
+        def toScalaCode: String = code
+      }
+    }.toList
+  }
+}

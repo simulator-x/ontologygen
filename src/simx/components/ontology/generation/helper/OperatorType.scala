@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 The SIRIS Project
+ * Copyright 2015 The SIRIS Project
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,16 +18,26 @@
  * Federal Ministry of Education and Research (grant no. 17N4409).
  */
 
-package simx.components.ontology.generation.member
+package simx.components.ontology.generation.helper
 
-import org.semanticweb.owlapi.model.OWLClass
-import simx.components.ontology.generation.OntoGenTwo
+import java.io.File
 
 /**
- * Created by dwiebusch on 01.09.14
+ * Created by martin on 25/02/15.
  */
-class OntologyRelationDescription(override val owlClass : OWLClass)(implicit o : OntoGenTwo )
-  extends OntologyMember(owlClass)(o){
-     override def toString =
-       "Relations are not supported (yet)"
-   }
+object OperatorType extends OntoDefinitions {
+
+  override protected def coreDir = new File(".")
+
+  def apply(operatorTypeString: String) = operatorTypeString match {
+    case `prefixOperatorType` => Prefix()
+    case `infixOperatorType` => Infix()
+    case s => throw new Exception ("[OntologyGenerator][OperatorType] Invalid operator type: '" + s + "'")
+  }
+}
+
+abstract class OperatorType
+
+case class Prefix private[helper]() extends OperatorType
+case class Infix private[helper]()  extends OperatorType
+

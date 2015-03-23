@@ -21,6 +21,7 @@
 package simx.components.ontology.generation
 
 import java.io.File
+import java.net.InetAddress
 
 /**
  * Created by dwiebusch on 01.09.14
@@ -38,11 +39,11 @@ object OntoGenSimxOntology {
     val wd = args.toList.tail.headOption.
       getOrElse(throw new Exception(
       "[error][Ontology Generation] No working directory in program arguments."))
-    val p = new OntoGenTwo(base)
+    val p = new OntoGenTwo(new File(base))
     val simxOntologyFile = new File(wd + "/simxOntology.owl").getAbsoluteFile
     if(!simxOntologyFile.exists())
       throw new Exception("[error][Ontology Generation] No 'simxOntology.owl' found in " + wd)
-    p.load(simxOntologyFile)
+    p.myLoad(simxOntologyFile)
     p.parse()
   }
 }

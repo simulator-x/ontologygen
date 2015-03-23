@@ -32,42 +32,70 @@ import org.semanticweb.owlapi.model.IRI
  */
 trait OntoDefinitions {
 
-  protected def corePath: String
+  protected def coreDir: File
 
   //OWLPropertyNames
+  protected val hasName = "hasName"
+  protected val implementedBy = "implementedBy"
   protected val hasConstructor = "hasConstructor"
   protected val forComponent = "forComponent"
   protected val hasDataType = "hasDataType"
 
+  protected val describesProperty = "describesProperty"
   protected val hasPrecondition = "hasPrecondition"
   protected val hasParameter = "hasParameter"
+  protected val providesParameter = "providesProperty"
+  protected val requiresParameter = "requiresProperty"
   protected val describedBy = "describedBy"
-  protected val isSubjectOf = "isSubjectOf"
-  protected val isObjectOf = "isObjectOf"
+  protected val hasSubject = "hasSubject"
+  protected val hasPredicate = "hasPredicate"
+  protected val hasProperty = "hasProperty"
+  protected val hasObject = "hasObject"
   protected val hasEffect = "hasEffect"
   protected val hasRole = "hasRole"
 
   protected val inPackage = "inPackage"
   protected val hasAspect = "hasAspect"
+  protected val hasValue = "hasValue"
   protected val basedOn = "basedOn"
   protected val has_a = "has"
 
+  protected val prefixOperatorType = "PrefixOperatorType"
+  protected val infixOperatorType = "InfixOperatorType"
+
   //shortcuts
-  val symbolsBase = "Concept"
-  val baseName    = "SVarDescription"
-  val oSymbol     = "OntologySymbol"
-  val oMember     = "SVarDescription"
-  val nullName    = "nullType"
-  val actionIRI   = IRI.create("http://www.hci.uni-wuerzburg.de/ontologies/simx/SimxCoreOntology.owl#Action")
+  val symbolsBase   = "Concept"
+  val descBbaseName = "SVarDescription"
+  val oSymbol       = "OntologySymbol"
+  val oMember       = "SVarDescription"
+  val nullName      = "NullType"
+  val actionIRI     = IRI.create("http://www.hci.uni-wuerzburg.de/ontologies/simx/SimxCoreOntology.owl#Action")
+  val functionIRI   = IRI.create("http://www.hci.uni-wuerzburg.de/ontologies/simx/concepts/Actions.owl#Function")
 
   protected val outPkg        = ".ontology.types"
   protected val outFileNames  = "package.scala"
 
   //Files
   protected val symbolsFile   =
-    corePath + File.separator + "core/src/simx/core/ontology/Symbols.scala"
+    coreDir + File.separator + "core/src/simx/core/ontology/Symbols.scala"
+  protected val aspectsFile   =
+    coreDir + File.separator + "core/src/simx/core/ontology/aspects/Aspects.scala"
+  protected val semanticTraitsFile   =
+    coreDir + File.separator + "core/src/simx/core/ontology/semtraits/package.scala"
+  protected val actionsFile   =
+    coreDir + File.separator + "core/src/simx/core/ontology/actions/Actions.scala"
   protected val entitiesFile  =
-    corePath + File.separator + "core/src/simx/core/ontology/entities/Entities.scala"
+    coreDir + File.separator + "core/src/simx/core/ontology/entities/Entities.scala"
   protected val entityDescriptionsFile =
-    corePath + File.separator + "core/src/simx/core/ontology/entities/EntityDescriptions.scala"
+    coreDir + File.separator + "core/src/simx/core/ontology/entities/EntityDescriptions.scala"
+  protected def functionFile(pkgName: String)  =
+    moduleFile(pkgName, "ontology/functions/Functions.scala")
+  protected def sVarDescFile(pkgName: String) =
+    moduleFile(pkgName, "ontology/types/package.scala")
+  protected def moduleFile(pkgName: String, pathInModule: String) = {
+    val moduleDir = new File(coreDir, pkgName.replaceFirst("simx.", "").replace(".", "/"))
+    val srcDir = new File(moduleDir, "src")
+    val modulePackageDir = new File(srcDir, pkgName.replace(".", "/"))
+    new File(modulePackageDir, pathInModule)
+  }
 }

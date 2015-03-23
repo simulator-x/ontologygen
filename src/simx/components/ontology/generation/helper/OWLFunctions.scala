@@ -20,18 +20,35 @@
 
 package simx.components.ontology.generation.helper
 
-import org.semanticweb.owlapi.model.{IRI, OWLIndividual, OWLNamedObject}
+import org.semanticweb.owlapi.model._
 
 /**
  * Created by dwiebusch on 01.09.14
  */
 object OWLFunctions{
+  def cap(s: String): String =
+    s.charAt(0).toUpper + s.substring(1)
+
+  def deCap( s : String ) : String =
+    if (s.length() < 2) s.toLowerCase else s.charAt(0).toLower + s.substring(1)
+
   def getName( iri : IRI ) : String =
     iri.toString.replaceAll(".*#", "")
 
-  def getName( entity : OWLNamedObject ) : String =
+  def getName( entity : HasIRI ) : String =
     getName(entity.getIRI)
 
   def getName( individual : OWLIndividual ) : String =
     getName(individual.asOWLNamedIndividual : OWLNamedObject)
+
+  def indentAllLines(level: Int)(multiLineString: String) = {
+    val res = new StringBuilder
+    if(multiLineString.nonEmpty)
+      (0 until level).foreach(i => res.append('\t'))
+    multiLineString.foreach(c => {
+      res.append(c)
+      if (c == '\n') (0 until level).foreach(i => res.append('\t'))
+    })
+    res
+  }
 }

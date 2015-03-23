@@ -20,21 +20,32 @@
 
 package simx.components.ontology.generation.member
 
+import simx.components.ontology.generation.helper.{WritableForPackage, OWLFunctions}
+
 /**
  * Created by dwiebusch on 01.09.14
  */
 trait Writable {
-   def getName : String
-   def getEntityString : Option[String]
-   def getEntityDescription : Option[String]
-   def getSVarDescriptions : Map[String, String]
+  def getName : String
+  def getEntityStrings : List[String] = Nil
+  def getEntityDescriptions : List[String] = Nil
+  def getSVarDescriptions : List[WritableForPackage] = Nil
+  def getAspectDescriptions : List[String] = Nil
+  def getActionDescriptions : List[String] = Nil
+  def getFunctionDescriptions : List[String] = Nil
+  def getFunctions : List[PlainFunction] = Nil
+  def getSemtraitDescriptions : List[String] = Nil
 
-   def getFullName : String =
-     "simx.core.ontology.types." + getName
+  def getFullName : String =
+    "simx.core.ontology.types." + getName
 
-   def getSymbolString : String =
-     "val " + deCap(getName) + " = OntologySymbol(Symbol(\"" + getName.capitalize + "\"))"
+  def getSymbolString : String =
+    "object " + deCap(getName) + " extends OntologySymbol(Symbol(\"" + getName.capitalize + "\"))"
 
-   protected def deCap( s : String ) : String =
-     if (s.length() < 2) s.toLowerCase else s.charAt(0).toLower + s.substring(1)
- }
+  protected def deCap( s : String ) : String = OWLFunctions.deCap(s)
+
+  protected def cap(s: String) = OWLFunctions.cap(s)
+
+  protected def generateException(s: String) =
+    new Exception("[OntologyGenerator][" + getClass.getSimpleName + "] " + s)
+}

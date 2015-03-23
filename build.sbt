@@ -16,7 +16,7 @@ classDirectory in Compile <<= target(_ / "scala/classes")
 
 classDirectory in Test <<= target(_ / "scala/test-classes")
 
-lazy val copyTemplates = taskKey[Unit]("Genera")
+lazy val copyTemplates = taskKey[Set[java.io.File]]("Genera")
 
 copyTemplates := IO.copy( ((baseDirectory.value / "src/simx/components/ontology/generation/templates") ** "*.tpl").get map {f => (f, baseDirectory.value / "target/scala/classes/simx/components/ontology/generation/templates" / f.getName)}  )
 

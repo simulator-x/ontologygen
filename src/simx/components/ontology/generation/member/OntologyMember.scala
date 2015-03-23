@@ -22,7 +22,7 @@ package simx.components.ontology.generation.member
 
 import org.semanticweb.owlapi.model._
 import simx.components.ontology.generation.OntoGenTwo
-import simx.components.ontology.generation.helper.DescriptionStub
+import simx.components.ontology.generation.helper.{OWLFunctions, DescriptionStub}
 
 import scala.collection.JavaConversions.asScalaSet
 
@@ -46,25 +46,33 @@ object OntologyMember{
   def apply( key : OWLIndividual) : Option[OntologyMember] =
     registry.get(key)
 
-  def apply(owlClass : OWLClass, o : OntoGenTwo ) =
-    if ( o.getSuperClasses(owlClass).contains(o.getEntityClass) )
+  def apply(owlClass : OWLClass, o : OntoGenTwo ) = {
+    import o._
+    if (owlClass == getEntityDescClass || getSuperClasses(owlClass).contains(getEntityDescClass))
       new OntologyEntityDescription(owlClass)(o)
-    else if ( o.getSuperClasses(owlClass).contains(o.getRelationClass) )
+    else if (getSuperClasses(owlClass).contains(getEntityClass))
+      new OntologySemTrait(owlClass)(o)
+    else if (owlClass == getActionClass || getSuperClasses(owlClass).contains(getActionClass))
+      new OntologyActionClass(owlClass)(o)
+    else if (getSuperClasses(owlClass).contains(getRelationClass))
       new OntologyRelationDescription(owlClass)(o)
-    else
+    else if (getSuperClasses(owlClass).contains(getAspectClass))
+      new OntologyAspectMember(owlClass)(o)
+    else if (owlClass == getSVarDescriptionClass)
       new OntologySVarDescription(owlClass)(o)
+    else
+      PlainOntologyMember(owlClass)(o)
+  }
+
+
+  val sVarDescClassName = "simx.core.ontology.SValDescription"
+  val nullTypeClassName = "simx.core.ontology.types.NullType"
 }
 
-abstract class OntologyMember( val owlClass : OWLClass)(implicit o : OntoGenTwo ) extends Writable{
+abstract class OntologyMember( val owlClass : OWLClass)(implicit o : OntoGenTwo ) extends Writable {
   getIndividuals.foreach( OntologyMember.register(_, this) )
 
-  def isEntity : Boolean
-
-  def getEntityString : Option[String]
-
-  def getEntityDescription : Option[String]
-
-  def getSVarDescriptions : Map[String, String]
+  def isEntity : Boolean = false
 
   def getName : String =
     owlClass.toStringID.replaceAll(".*#", "")
@@ -98,35 +106,21 @@ abstract class OntologyMember( val owlClass : OWLClass)(implicit o : OntoGenTwo 
       DescriptionStub()
   }
 
-  protected def getIndividuals : Set[OWLIndividual] =
+  def getIndividuals : Set[OWLIndividual] =
     o.getIndividuals(owlClass)
 
-  protected def getName( i : OWLIndividual ) : String =
-    i.toStringID.replaceAll(".*#", "")
-
-  protected def getName( entity : OWLEntity ) : String =
-    entity.toStringID.replaceAll(".*#", "")
-
   protected def getEntitySVarDescription : String =
-    "object "+ getName +" extends simx.core.ontology.EntitySVarDescription[" + getEntityName + "](simx.core.ontology.Symbols."+deCap(getName) +
+    "object "+ getName +" extends simx.core.ontology.EntitySValDescription(BaseValueDescription(simx.core.ontology.Symbols."+deCap(getName) + ")" +
       ", new simx.core.ontology.entities." + getName + "(_, _), \"" + owlClass.toStringID + "\" )"
 
-  protected def getSVarDescription( i : OWLIndividual ) : String = {
-    val base = getBase(i) match {
-      case Some(b) if OntologyMember(b).isDefined =>
-        getTargetComponent(getBase(i).get) + ".ontology.types."+ OntologyMember(b).get.getName
-      case _ =>
-        "simx.core.ontology.types.NullType"
-    }
-    "object " + getName + " extends simx.core.ontology.SVarDescription("+ base + " as simx.core.ontology.Symbols." + deCap(getName) +
-      typeString(i) + " definedAt \"" + owlClass.toStringID  +"\")"
-  }
+  protected def getDescribedClasses(i : OWLIndividual) =
+    o.getTypes(i).filter{ _.getObjectPropertiesInSignature.contains(o.getDescribesProp) }.
+      map(_.getClassesInSignature.headOption).
+      filter(_.isDefined).
+      map(_.get)
 
-  protected def typeString( i : OWLIndividual ) : String = {
-    getDataType(i) match {
-      case Some(dt) => " withType classOf[" + getName(dt) + "]"
-      case None => ""
-    }
+  protected def typeString( i : OWLIndividual ) : Option[String] = getDataType(i).map { dt =>
+    "classOf[" + getTypeString(dt).getOrElse(OWLFunctions.getName(dt)) + "]"
   }
 
   protected def getBaseDataType( i : OWLIndividual ) : Option[OWLIndividual] =
@@ -137,7 +131,7 @@ abstract class OntologyMember( val owlClass : OWLClass)(implicit o : OntoGenTwo 
       }
     }.getOrElse(None)
 
-  protected def getTargetComponent( i : OWLIndividual ) : String =
+  def getTargetComponent( i : OWLIndividual ) : String =
     o.getObjectProperties(i)(o.getForComponentProp).headOption.collect{
       case x => o.getDataProperties(x)(o.getInPackageProp).headOption.collect{
         case literal => literal.getLiteral
@@ -149,13 +143,21 @@ abstract class OntologyMember( val owlClass : OWLClass)(implicit o : OntoGenTwo 
       x => OntologyMember(x).collect{ case something => something.getName }.getOrElse("")
     }
 
-  protected def getBase( i : OWLIndividual ) : Option[OWLIndividual] =
+  def getBase( i : OWLIndividual ) : Option[OWLIndividual] =
     o.getObjectProperties(i)(o.getBasedOnProp).headOption
+
+  def getMostGeneralBase( i : OWLIndividual ) : OWLIndividual = getBase(i) match {
+    case Some(base) => getMostGeneralBase(base)
+    case None => i
+  }
+
+  protected def getTypeString( i : OWLIndividual ) : Option[String] =
+    o.getDataProperties(i)(o.getHasTypeStringProp).headOption.map( _.getLiteral )
 
   protected def getDataType( i : OWLIndividual ) : Option[OWLIndividual] =
     o.getObjectProperties(i)(o.getDataTypeProp).headOption
 
-  protected def isRelation : Boolean
+  protected def isRelation : Boolean = false
 
   protected def generatesSVar( i : OWLIndividual ) : Boolean =
     getIndividuals.nonEmpty

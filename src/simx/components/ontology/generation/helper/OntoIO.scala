@@ -35,8 +35,8 @@ trait OntoIO extends OntoDefinitions {
   private val templatesPath = "/simx/components/ontology/generation/templates/"
   private val templatesExtension = ".scala.tpl"
 
-  private def headerFrom(template: String, packageName: String, suffix: String = "\n\n") =
-    packageName + "\n\n" + loadTemplate("HeaderComment") + "\n\n" + loadTemplate(template) + suffix
+  private def headerFrom(template: String, packageName: String, suffix: String = "\n\n", additionalImports: List[String] = Nil) =
+    packageName + "\n\n" + loadTemplate("HeaderComment") + "\n\n" + (if(additionalImports.nonEmpty) additionalImports.mkString("","\n","\n") else "") + loadTemplate(template) + suffix
 
   private def loadTemplate(name: String) =
     Source.fromInputStream(getClass.getResourceAsStream(templatesPath + name + templatesExtension)).
@@ -54,6 +54,23 @@ trait OntoIO extends OntoDefinitions {
   protected val symbolsHeader = headerFrom("SymbolsHeader", "package simx.core.ontology", "\n\n\t")
   protected val entitiesHeader = headerFrom("EntitiesHeader", "package simx.core.ontology.entities")
   protected val descriptionHeader = headerFrom("EntityDescriptionsHeader", "package simx.core.ontology.entities")
-  protected def typesHeader(packageName: String) = headerFrom("TypesHeader", packageName, "\n\t")
+  protected val aspectsHeader = headerFrom("AspectsHeader", "package simx.core.ontology.aspects")
+  protected val actionsHeader = headerFrom("ActionsHeader", "package simx.core.ontology.actions")
+  protected val semtraitHeader = headerFrom("SemTraitsHeader", "package simx.core.ontology")
+  protected def functionsHeader(packageName: String) = headerFrom(
+    template = "FunctionsHeader",
+    packageName = "package " + packageName + ".ontology.functions",
+    suffix = "\n\n" + "trait Functions{\n",
+    additionalImports =
+        if(packageName != "simx.core") "import " + packageName + ".ontology.types._" :: Nil else Nil
+  )
+  protected def typesHeader(packageName: String) = headerFrom(
+    template = "TypesHeader",
+    packageName = "package " + packageName + ".ontology",
+    suffix = "\n",
+    additionalImports =
+      "import " + packageName + ".ontology.functions.Functions" ::
+      (if(packageName == "simx.core") Nil else List[String]("import simx.core.ontology.types._"))
+  )
 
 }

@@ -20,35 +20,106 @@
 
 package simx.components.ontology.generation.member
 
-import org.semanticweb.owlapi.model.OWLClass
+import org.semanticweb.owlapi.model.{OWLObjectIntersectionOf, OWLIndividual, OWLClass}
 import simx.components.ontology.generation.OntoGenTwo
+import simx.components.ontology.generation.helper.{WritableForPackage, OWLFunctions}
+import collection.JavaConversions._
 
 /**
  * Created by dwiebusch on 01.09.14
  */
 class OntologyEntityDescription(override val owlClass : OWLClass)(implicit o : OntoGenTwo )
   extends OntologyMember(owlClass)(o){
-     def getEntityString : Option[String] =
-       Some("class " + getName + "( e : Entity, a : SVarActor ) extends Entity(e)(a) ")
+  override def getEntityStrings : List[String] =
+    o.getIndividuals(owlClass).flatMap{
+      getDescribedClasses(_).
+        filterNot(_ equals o.getEntityClass).
+        map( i => "class " + OWLFunctions.getName(i) + "( e : Entity, a : SVarActor ) extends Entity(e)(a) ")
+    }.toList
 
-     override def isEntity: Boolean =
-       true
+  override def isEntity: Boolean =
+    true
 
-     override protected def isRelation: Boolean =
-       false
+  override def getSVarDescriptions = {
+    o.getIndividuals(owlClass).
+      flatMap(getDescribedClasses(_).filterNot(_ equals o.getEntityClass)).map(cls => {
+        new WritableForPackage {
+          def packageName: String = "simx.core"
+          def toScalaCode: String =
+            "object " + OWLFunctions.getName(cls) + " extends EntitySValDescription(Entity.valueDescription as Symbols." + deCap(OWLFunctions.getName(cls)) + ", " +
+            "new simx.core.ontology.entities." + OWLFunctions.getName(cls) + "(_, _), \"" + cls.toStringID + "\")"
+        }
+      }).toList
+  }
 
-     def getSVarDescriptions : Map[String, String] =
-       Map[String, String]("simx.core.ontology" -> getEntitySVarDescription)
+  protected def tab(preChar : String = "", i : Int = 1) =
+    preChar + "\n" + ("\t" * i)
 
-     def getEntityDescription : Option[String] =
-         Some("class " + getName + "EntityDescription( val name: Symbol, aspects : List[EntityAspect] ) " +
-           "extends SpecificEntityDescription(ontology.types." + getName + ", aspects, name, Nil" +
-           getDescriptionStub.collect{ case stub => ", Seq(" + stub.getFeatureString +")" }.getOrElse("") +
-           ")")
+  protected case class AspectFinder() extends VisitorAdapter(Set[OWLClass]()){
+    override def visit(intersection: OWLObjectIntersectionOf) =
+      intersection.getOperands.foreach(_ accept this)
 
-     override def toString =
-       "OntologyMember " + getName + ":\n--------------------------------------------\n" +
-         "Symbol:\n\t" + getSymbolString + "\n" + "Descriptions:\n\t" + getSVarDescriptions.mkString("\n\t") +
-         "\nAssocEntity:\n\t" + getEntityString.get + "\nEntityDescription:\n\t" + getEntityDescription.get
+    override def visit(owlClass: OWLClass) =
+      if (o.getSuperClasses(owlClass).contains(o.getAspectClass))
+        result += owlClass
+  }
 
-   }
+  protected def getEntitySVarDescription( i : OWLIndividual ) =
+    getDescribedClasses(i).filterNot(_ equals o.getEntityClass).map{ cls =>
+      import o._
+      var aspects = getObjectProperties(i)(getHasAspectObjectProp).map(OntologyAspectIndividual(_)(o)).toList
+      val generalAspects = getSubClasses(cls, recurse = false).flatMap(AspectFinder().parse)
+
+      // generic version
+      if (generalAspects.nonEmpty){
+        val possibleAspects = generalAspects.map{ aspType => aspType -> o.getIndividuals(aspType) }.filterNot{
+          generalAsp => aspects.exists( moreSpecificAsp => getTypes(moreSpecificAsp.i).contains(generalAsp._1) )
+        }
+        if (possibleAspects.forall(_._2.size == 1))
+          aspects ++= possibleAspects.map(pa => OntologyAspectIndividual(pa._2.head)).toList
+      }
+
+      if (aspects.nonEmpty) {
+        val overrides = getObjectPropertyAnnotationsFor(i)(getOverridesProvide).map{
+          ovr => OntologyAspectIndividual(ovr._1) -> ovr._2.map(x => deCap(x.getValue.toString.replaceAll(".*#", "")))
+        }
+
+        val filteredParameters = aspects.foldLeft(Map[OntologyAspectIndividual, List[Parameter]]()){
+          (map, aspect) => map.updated(aspect, aspect.parameters.filterNot{
+            parameter => overrides.exists(ovr => ovr._2.contains(parameter.name) && ovr._1 != aspect)
+          })
+        }
+
+        "case class " + OWLFunctions.getName(i) + tab("(") +
+          filteredParameters.values.flatten.toList.
+            sortWith((a, b) => (a.defaultValue.isEmpty && b.defaultValue.nonEmpty) || a.name < b.name ).
+            map(p => p.optionString + (if (p.defaultValue.isEmpty) " = Right(null)" else "" )).
+            mkString(tab(",")) + "\n) " +
+          "extends EntityDescription " + tab("(", 2) +
+          aspects.map{
+            aspect =>
+              OWLFunctions.getName(aspect.name.get.asOWLClass()) + tab("(", 3) +
+                filteredParameters(aspect).map(p => p.name + " = " + p.name ).mkString(tab(",", 3)) + tab() + ")"
+          }.mkString(tab(",")) +
+          "\n)"
+      }
+      else {
+        "class " + OWLFunctions.getName(cls) + "EntityDescription( val name: Symbol, aspects : List[EntityAspect] ) " +
+          "extends SpecificEntityDescription(ontology.types." + OWLFunctions.getName(cls) + ", aspects, name, Nil" +
+          getDescriptionStub.collect { case stub => ", Seq(" + stub.getFeatureString + ")"}.getOrElse("") +
+          ")"
+      }
+    }.toList
+
+  override def getEntityDescriptions : List[String] =
+    o.getIndividuals(owlClass).foldLeft(List[String]()){
+      (list, elem) => getEntitySVarDescription(elem) ::: list
+    }
+
+
+  override def toString =
+    "OntologyMember " + getName + ":\n--------------------------------------------\n" +
+      "Symbol:\n\t" + getSymbolString + "\n" + "Descriptions:\n\t" + getSVarDescriptions.mkString("\n\t") +
+      "\nAssocEntity:\n\t" + getEntityStrings + "\nEntityDescription:\n\t" + getEntityDescriptions
+
+}

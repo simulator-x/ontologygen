@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 The SIRIS Project
+ * Copyright 2015 The SIRIS Project
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,16 +18,16 @@
  * Federal Ministry of Education and Research (grant no. 17N4409).
  */
 
-package simx.components.ontology.generation.member
-
-import org.semanticweb.owlapi.model.OWLClass
-import simx.components.ontology.generation.OntoGenTwo
+package simx.components.ontology.generation.helper
 
 /**
- * Created by dwiebusch on 01.09.14
+ * Created by martin on 25/02/15.
  */
-class OntologyRelationDescription(override val owlClass : OWLClass)(implicit o : OntoGenTwo )
-  extends OntologyMember(owlClass)(o){
-     override def toString =
-       "Relations are not supported (yet)"
-   }
+
+//TODO: Has to be integrated with [[simx.components.ontology.generation.member.Writable]]
+trait WritableForPackage {
+
+  def packageName: String
+  def toScalaCode: String
+
+}

@@ -21,7 +21,7 @@
 package simx.components.ontology.generation.member
 
 import org.semanticweb.owlapi.model._
-import simx.components.ontology.generation.helper.OWLFunctions
+import simx.components.ontology.generation.helper.{WritableForPackage, OWLFunctions}
 
 import scala.collection.JavaConversions._
 
@@ -54,24 +54,21 @@ object SimXRelation{
 
   protected def create(baseProp : OWLObjectPropertyExpression, ontologies : java.util.Set[OWLOntology]) : Set[SimXRelation] =
     baseProp.getSubProperties(ontologies).foldLeft(Set[SimXRelation]()) {
-      (set, owlLink) => set + SimXObjectRelation(owlLink, owlLink.getDomains(ontologies).toSet, owlLink.getRanges(ontologies).toSet)
+      (set, owlLink) => set + SimXObjectRelation(owlLink, owlLink.getDomains(ontologies).toSet,
+        owlLink.getRanges(ontologies).toSet, owlLink.isSymmetric(ontologies))
   }
 }
 
-protected abstract class SimXRelation(expr : OWLProperty[_, _]) extends Writable{
+protected abstract class SimXRelation(expr : OWLProperty[_, _]) extends Writable {
   protected def toTypeString : String
 
   def getName : String =
     OWLFunctions.getName(expr)
 
-  def getSVarDescriptions : Map[String, String] =
-    Map("simx.core.ontology" -> toTypeString)
-
-  override def getEntityDescription =
-    None
-
-  override def getEntityString =
-    None
+  override def getSVarDescriptions = new WritableForPackage {
+    def packageName: String = "simx.core"
+    def toScalaCode: String = toTypeString
+  } :: Nil
 
   override def toString: String =
     "SimXRelation " + getName + ":\n--------------------------------------------\n" +
@@ -83,13 +80,14 @@ case class SimXDataRelation(owlLink : OWLDataPropertyExpression,
   extends SimXRelation(owlLink.asOWLDataProperty())
 {
   protected def toTypeString: String =
-    "object " + getName.capitalize + " extends SVarDescription[Boolean, Boolean](" +
-      SimXRelation.typesPrefix + "Boolean as Symbols." + deCap(getName) + " definedAt " + owlLink.toString.replaceAll("[<>]", "\"") +")"
+    "object " + getName.capitalize + " extends SValDescription(" +
+      SimXRelation.typesPrefix + "Boolean as BaseValueDescription(Symbols." + deCap(getName) + ") definedAt " + owlLink.toString.replaceAll("[<>]", "\"") +")"
 }
 
 case class SimXObjectRelation(owlLink : OWLObjectPropertyExpression,
                               domains : Set[OWLClassExpression],
-                              ranges : Set[OWLClassExpression])
+                              ranges : Set[OWLClassExpression],
+                              isSymmetric : Boolean )
   extends SimXRelation(owlLink.asOWLObjectProperty())
 {
   protected def toTypeString: String = {
@@ -97,7 +95,7 @@ case class SimXObjectRelation(owlLink : OWLObjectPropertyExpression,
     val objType = SimXRelation.typesPrefix + ranges.headOption.collect { case range => OWLFunctions.getName(range.asOWLClass())}.getOrElse("Entity")
 
     "object " + getName.capitalize + " extends simx.core.svaractor.unifiedaccess.RelationDescription[" + subjType + ".dataType, " + objType + ".dataType](" +
-      subjType + ", Symbols." + getName + ", " + objType + ", " + owlLink.toString.replaceAll("[<>]", "\"") +  ")"
+      subjType + ", Symbols." + getName + ", " + objType + ", " + owlLink.toString.replaceAll("[<>]", "\"") +  ", isSymmetric = " + isSymmetric + ")"
   }
 }
 
