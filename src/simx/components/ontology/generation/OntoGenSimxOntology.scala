@@ -21,7 +21,9 @@
 package simx.components.ontology.generation
 
 import java.io.File
-import java.net.InetAddress
+import java.net.URL
+
+import scala.io.Source
 
 /**
  * Created by dwiebusch on 01.09.14
@@ -43,7 +45,12 @@ object OntoGenSimxOntology {
     val simxOntologyFile = new File(wd + "/simxOntology.owl").getAbsoluteFile
     if(!simxOntologyFile.exists())
       throw new Exception("[error][Ontology Generation] No 'simxOntology.owl' found in " + wd)
-    p.myLoad(simxOntologyFile)
+        p.myLoad(simxOntologyFile)
+
+//    val url = "localhost:8080/" + wd.replace(new File(base).getCanonicalPath, "") + "/simxOntology.owl"
+//    println(Source.fromURL("http://localhost:8080" +  wd.replace(new File(base).getCanonicalPath, "") + "/simxOntology.owl").mkString)
+
     p.parse()
+    p.shutdown()
   }
 }

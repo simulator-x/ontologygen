@@ -31,22 +31,22 @@ import collection.JavaConversions._
 case class OntologyActionClass(override val owlClass : OWLClass)(implicit o : OntoGenTwo)
   extends OntologyMember(owlClass)(o)
 {
-  var functions : Set[PlainFunction] = Set()
+//  var functions : Set[PlainFunction] = Set()
   var actions : Set[OntologyAction] = Set()
 
 
   getIndividuals.foreach{ actionIndividual =>
     val potRet = new OntologyAction(actionIndividual)(o)
-    if(potRet.effects.isEmpty && potRet.preconditions.isEmpty)
-      functions += PlainFunction(actionIndividual)(o)
-    else
+//    if(potRet.effects.isEmpty && potRet.preconditions.isEmpty)
+//      functions += PlainFunction(actionIndividual)(o)
+//    else
       actions += potRet
   }
 
-  override def getFunctionDescriptions: List[String] =
-    functions.map(_.toString).toList
+//  override def getFunctionDescriptions: List[String] =
+//    functions.map(_.toString).toList
 
-  override def getFunctions : List[PlainFunction] = functions.toList
+//  override def getFunctions : List[PlainFunction] = functions.toList
 
   override def getActionDescriptions: List[String] =
     actions.map(_.toString).toList
@@ -100,8 +100,8 @@ protected abstract class PreconOrEffect(prop : OWLClassExpression)(implicit o : 
       else
         FunctionParameter(idx, makeFunction(p._2))
     }
-    val func = PlainFunction(makePredicate(pred.get))
-    val mappedParams = funcParams.zip(func.parameters).map( t => t._1.setType(t._2._2) )
+    val func = OntologyFunction(makePredicate(pred.get).asOWLNamedIndividual())
+    val mappedParams = funcParams.zip(func.parameterClasses).map( t => t._1.setType(t._2._2) )
     new Function(makePredicate(pred.get), mappedParams.toSeq :_*)
   }
 
@@ -173,7 +173,7 @@ case class Function(predicate : OWLIndividual, parameters : FunctionParameter*)(
     parameters.isEmpty
 
   def function =
-    if (isParameterless) None else Some(PlainFunction(predicate)(o))
+    if (isParameterless) None else Some(OntologyFunction(predicate.asOWLNamedIndividual())(o))
 
   def getParameters : Set[(OWLIndividual, OWLClass)] =
     parameters.flatMap(_.getParameters).toSet

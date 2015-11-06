@@ -38,6 +38,6 @@ object OperatorType extends OntoDefinitions {
 
 abstract class OperatorType
 
-case class Prefix private[helper]() extends OperatorType
-case class Infix private[helper]()  extends OperatorType
+case class Prefix() extends OperatorType
+case class Infix()  extends OperatorType
 

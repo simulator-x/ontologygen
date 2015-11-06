@@ -54,16 +54,19 @@ object OntologyMember{
       new OntologySemTrait(owlClass)(o)
     else if (owlClass == getActionClass || getSuperClasses(owlClass).contains(getActionClass))
       new OntologyActionClass(owlClass)(o)
+    else if (owlClass == getFunctionClass || getSuperClasses(owlClass).contains(getFunctionClass))
+      new OntologyFunctionClass(owlClass)(o)
     else if (getSuperClasses(owlClass).contains(getRelationClass))
       new OntologyRelationDescription(owlClass)(o)
     else if (getSuperClasses(owlClass).contains(getAspectClass))
       new OntologyAspectMember(owlClass)(o)
     else if (owlClass == getSVarDescriptionClass)
       new OntologySVarDescription(owlClass)(o)
+    else if (owlClass == getEventDescriptionClass || getSuperClasses(owlClass).contains(getEventDescriptionClass))
+      new OntologyEventDescription(owlClass)(o)
     else
       PlainOntologyMember(owlClass)(o)
   }
-
 
   val sVarDescClassName = "simx.core.ontology.SValDescription"
   val nullTypeClassName = "simx.core.ontology.types.NullType"

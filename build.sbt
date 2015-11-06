@@ -1,3 +1,14 @@
+libraryDependencies ++= Seq(
+	compilerPlugin("org.scala-lang.plugins" % ("scala-continuations-plugin_" + scalaVersion.value) % "1.0.2"),
+	"org.eclipse.jetty" % "jetty-server" % "9.2.11.v20150529",
+	"org.scala-lang" % "scala-library-all" % scalaVersion.value,
+    "com.hermit-reasoner" % "org.semanticweb.hermit" % "1.3.8.4",
+    "net.sourceforge.owlapi" % "owlapi-distribution" % "3.5.0",
+	"org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.3",
+	"org.apache.logging.log4j" % "log4j-api" % "2.3",
+	"org.apache.logging.log4j" % "log4j-core" % "2.3"
+)
+
 scalaSource in Compile <<= baseDirectory(_ / "src")
 
 unmanagedJars in Compile <<= baseDirectory map { base => ((base ** "lib") ** "*.jar").classpath }
@@ -5,12 +16,6 @@ unmanagedJars in Compile <<= baseDirectory map { base => ((base ** "lib") ** "*.
 unmanagedClasspath in Compile += baseDirectory.value / "config" 
 
 autoCompilerPlugins := true
-
-libraryDependencies <<= (scalaVersion, libraryDependencies) { (ver, deps) =>
-    deps :+ compilerPlugin("org.scala-lang.plugins" % "scala-continuations-plugin_2.11.2" % "1.0.2")
-}
-
-ivyXML := scala.xml.XML.load( ontologyGen.base + "/ivy.xml" ) \ "dependencies"
 
 classDirectory in Compile <<= target(_ / "scala/classes")
 

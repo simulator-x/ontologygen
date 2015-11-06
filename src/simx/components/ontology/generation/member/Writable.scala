@@ -29,12 +29,13 @@ trait Writable {
   def getName : String
   def getEntityStrings : List[String] = Nil
   def getEntityDescriptions : List[String] = Nil
-  def getSVarDescriptions : List[WritableForPackage] = Nil
+  def getSVarDescriptions : List[SVarDescriptionForPackage] = Nil
   def getAspectDescriptions : List[String] = Nil
   def getActionDescriptions : List[String] = Nil
-  def getFunctionDescriptions : List[String] = Nil
-  def getFunctions : List[PlainFunction] = Nil
+//  def getFunctionDescriptions : List[String] = Nil
+  def getFunctions : List[OntologyFunction] = Nil
   def getSemtraitDescriptions : List[String] = Nil
+  def getEventDescriptions : List[String] = Nil
 
   def getFullName : String =
     "simx.core.ontology.types." + getName

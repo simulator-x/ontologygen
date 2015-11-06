@@ -44,8 +44,8 @@ trait OntoDefinitions {
   protected val describesProperty = "describesProperty"
   protected val hasPrecondition = "hasPrecondition"
   protected val hasParameter = "hasParameter"
-  protected val providesParameter = "providesProperty"
-  protected val requiresParameter = "requiresProperty"
+  protected val providesProperty = "providesProperty"
+  protected val requiresProperty = "requiresProperty"
   protected val describedBy = "describedBy"
   protected val hasSubject = "hasSubject"
   protected val hasPredicate = "hasPredicate"
@@ -88,8 +88,12 @@ trait OntoDefinitions {
     coreDir + File.separator + "core/src/simx/core/ontology/entities/Entities.scala"
   protected val entityDescriptionsFile =
     coreDir + File.separator + "core/src/simx/core/ontology/entities/EntityDescriptions.scala"
+  protected val eventDescriptionsFile =
+    coreDir + File.separator + "core/src/simx/core/ontology/entities/EventDescriptions.scala"
   protected def functionFile(pkgName: String)  =
     moduleFile(pkgName, "ontology/functions/Functions.scala")
+  protected def interpolatorFile(pkgName: String)  =
+    moduleFile(pkgName, "ontology/functions/Interpolators.scala")
   protected def sVarDescFile(pkgName: String) =
     moduleFile(pkgName, "ontology/types/package.scala")
   protected def moduleFile(pkgName: String, pathInModule: String) = {

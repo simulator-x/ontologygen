@@ -42,7 +42,7 @@ class OntologySemTrait(owlClass : OWLClass)(implicit o : OntoGenTwo) extends Ont
   }
 
   override def toString: String =
-    "object " + getName +" extends SemanticTrait(" + properties.mkString(" and ") + relations.mkString(", ") + ")"
+    "object " + getName +" extends SemanticTrait(" + properties.mkString(" :: ") + relations.mkString(", ") + ")"
 
   override def getSemtraitDescriptions =
     if (properties.nonEmpty) List(toString) else Nil

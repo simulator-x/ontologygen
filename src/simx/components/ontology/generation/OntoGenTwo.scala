@@ -24,6 +24,8 @@ import java.lang.Object
 import java.net._
 import java.nio.file.{Files, Paths}
 
+import simx.components.ontology.generation.server.OntoFileServer
+
 //import com.clarkparsia.pellet.owlapiv3.{PelletReasoner, PelletReasonerFactory}
 import java.io._
 
@@ -46,6 +48,7 @@ object OntoGenTwo{
     val url = args.headOption.getOrElse(throw new Exception("You must provide a URL when running OntoGenTwo"))
     p.load(url)
     p.parse()
+    p.shutdown()
   }
 
   def apply[T](self : T, onlyForComponent : Option[String] = None) : OntoGenTwo = self match {
@@ -70,6 +73,7 @@ object OntoGenTwo{
 class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) extends OntoIO {
 
   private implicit val parser = this
+  private val server = new OntoFileServer(coreDir.getParent)
   private val log = LoggerFactory.getLogger(this.asInstanceOf[Object].getClass)
 
   //internal variables
@@ -89,6 +93,9 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
     ontologyIRI = Some(iri)
   }
 
+  def shutdown() =
+    server.stop()
+
   def load( file : File ) : this.type =
     load(Some(IRI.create(file)))
 
@@ -96,27 +103,28 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
     load(Some(IRI.create(url)))
 
   def myLoad(f : File): Unit ={
-    val online = try {
-      val sock = new Socket("www.hci.uni-wuerzburg.de", 80)
-      if (sock != null){
-        sock.close()
-        true
-      } else
-        false
-    } catch {
-      case e : UnknownHostException => false
-      case e : SocketException => false
-      case e : Throwable => throw e
-    }
-
-    if (online) {
+//    val online = true
+////    try {
+////      val sock = new Socket("www.hci.uni-wuerzburg.de", 80)
+////      if (sock != null){
+////        sock.close()
+////        true
+////      } else
+////        false
+////    } catch {
+////      case e : UnknownHostException => false
+////      case e : SocketException => false
+////      case e : Throwable => throw e
+////    }
+//
+//    if (online) {
       load(f)
       cache()
-    } else {
-      println("No internet connection available, working on cached files")
-      getImports(f) map { new URL(_) } foreach _myLoad
-      setOntology(manager.loadOntologyFromOntologyDocument(f))
-    }
+//    } else {
+//      println("No internet connection available, working on cached files")
+//      getImports(f) map { new URL(_) } foreach _myLoad
+//      setOntology(manager.loadOntologyFromOntologyDocument(f))
+//    }
   }
 
   private def getImports(file : File): Seq[String] = {
@@ -205,15 +213,17 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
       init()
 
     members               = collectMembers(entryPoint.get) ++ SimXRelation.parse(ontology.get)
-    val actionList        = collectActions(actionClass.get).flatMap(getIndividuals)
+//    val actionList        = collectActions(actionClass.get).flatMap(getIndividuals)
     var symbolsList       = collectMembers(getOWLClass(symbolsBase).get).map(m => m.getSymbolString)
-    var svarDescList      = Set[WritableForPackage]()
+    var svarDescList      = Set[SVarDescriptionForPackage]()
+    var interpolatorList  = Set[WritableForPackage]()
     var entityStringList  = Set[String]()
     var entityDescList    = Set[String]()
     var aspectDescList    = Set[String]()
     var actionDescList    = Set[String]()
     var functionList      = Set[WritableForPackage]()
     var semtraitDescList  = Set[String]()
+    var eventDescList     = Set[String]()
 
     //println(actionList.map(new OntologyAction(_)))
 
@@ -246,6 +256,14 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
       actionDescList ++= m.getActionDescriptions
       functionList ++= m.getFunctions
       semtraitDescList ++= m.getSemtraitDescriptions
+      eventDescList ++= m.getEventDescriptions
+    }
+
+    interpolatorList = svarDescList.filter(_.interpolatorCode.isDefined).map{svDesc =>
+      new WritableForPackage {
+        override def packageName: String = svDesc.packageName
+        override def toScalaCode: String = svDesc.interpolatorCode.get
+      }
     }
 
     if (onlyForComponent.isEmpty){
@@ -255,15 +273,18 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
       write(aspectsFile, aspectsHeader + aspectDescList.mkString("\n\n"))
 //      write(actionsFile, actionsHeader + "object Actions{\n\t" + actionDescList.mkString("\n\t") + "\n}" )
       write(semanticTraitsFile, semtraitHeader + "package object semtraits{\n\t" + semtraitDescList.mkString("\n\t") + "\n}" )
+      write(eventDescriptionsFile, semtraitHeader + "package object events{\n\t" + eventDescList.mkString("\n\t") + "\n}" )
     }
 
-    onlyForComponent.foreach(comp => svarDescList = svarDescList.filter(_.packageName == comp))
-    onlyForComponent.foreach(comp => functionList = functionList.filter(_.packageName == comp))
+    onlyForComponent.foreach(comp => svarDescList     = svarDescList.filter(_.packageName == comp))
+    onlyForComponent.foreach(comp => functionList     = functionList.filter(_.packageName == comp))
+    onlyForComponent.foreach(comp => interpolatorList = interpolatorList.filter(_.packageName == comp))
 
     //Ensure that a function file is written for every module, that has a types file
     functionList ++= svarDescList.map(_.packageName).map(createDummyFunction)
 
     writeForPackage(functionList, functionsHeader, functionFile)
+    writeForPackage(interpolatorList, interpolatorsHeader, interpolatorFile)
     writeForPackage(svarDescList, typesHeader, sVarDescFile, 1, Some((7, 1)))
   }
 
@@ -279,9 +300,9 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
 
   def getAnnotationFor(i : OWLIndividual)(annoProp : OWLAnnotationProperty): List[String] = i match {
     case e: OWLEntity =>
-      manager.getOntologies.map(o => {
-        e.getAnnotations(o, annoProp).map(toAnnotationLiteral).flatten
-      }).flatten.toList
+      manager.getOntologies.flatMap{o =>
+        e.getAnnotations(o, annoProp).flatMap(toAnnotationLiteral)
+      }.toList
     case _ => Nil
   }
 
@@ -355,7 +376,7 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
     }
 
   def getSVarDescriptionIndividuals: Set[OWLIndividual] =
-    members.map{case desc : OntologySVarDescription => Some(desc); case _ => None}.flatten.map(_.getIndividuals).flatten
+    members.flatMap{case desc : OntologySVarDescription => Some(desc); case _ => None}.flatMap(_.getIndividuals)
 
   protected def collectActions( c : OWLClass) : Set[OWLClass] =
     asScalaSet(c.getSubClasses(manager.getOntologies)).flatMap(x => collectActions(x.asOWLClass())).toSet + c
@@ -365,6 +386,7 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
   private var entityClass : Option[OWLClass] = None
   private var entityDescClass : Option[OWLClass] = None
   private var sVarDescClass : Option[OWLClass] = None
+  private var eventDescClass : Option[OWLClass] = None
   private var entryPoint : Option[OWLClass] = None
   private var actionClass : Option[OWLClass] = None
   private var functionClass : Option[OWLClass] = None
@@ -386,15 +408,18 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
   private var hasPropertyProp : Option[OWLObjectProperty] = None
   private var describedByProp : Option[OWLObjectProperty] = None
   private var describesProp : Option[OWLObjectProperty] = None
+  private var describesEventProp : Option[OWLObjectProperty] = None
   private var hasObjectProp : Option[OWLObjectProperty] = None
   private var hasParameterProp : Option[OWLObjectProperty] = None
-  private var requiresParameterProp : Option[OWLObjectProperty] = None
-  private var providesParameterProp : Option[OWLObjectProperty] = None
+  private var requiresPropertyProp : Option[OWLObjectProperty] = None
+  private var providesPropertyProp : Option[OWLObjectProperty] = None
+  private var hasCreateParameterProp : Option[OWLObjectProperty] = None
   private var forCompObjectProp : Option[OWLObjectProperty] = None
   private var dataTypeObjectProp : Option[OWLObjectProperty] = None
   private var hasAspectObjectProp : Option[OWLObjectProperty] = None
   private var hasPreconditionProp : Option[OWLObjectProperty] = None
   private var hasDefaultValueAnnotation : Option[OWLAnnotationProperty] = None
+  private var hasAnnotationAnnotation : Option[OWLAnnotationProperty] = None
   private var commentAnnotation : Option[OWLAnnotationProperty] = None
   private var overridesProvideAnnotation : Option[OWLAnnotationProperty] = None
   var hasParameter1Prop : Option[OWLObjectProperty] = None
@@ -409,7 +434,7 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
 
     ontology.foreach { o =>
       println("Inferring axioms")
-
+      val inferationStartTime = System.currentTimeMillis()
       val factory: OWLReasonerFactory =
         new org.semanticweb.HermiT.Reasoner.ReasonerFactory()
       //        //PelletReasonerFactory.getInstance()
@@ -419,7 +444,8 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
 
       val inferredOntologyGenerator = new InferredOntologyGenerator(reasoner.get)
       inferredOntologyGenerator.fillOntology(manager, o)
-      println("Axioms inferred")
+      val inferationDuration = (System.currentTimeMillis() - inferationStartTime).toFloat / 1000f
+      println("Axioms inferred in " + inferationDuration.formatted("%.3f") + " sec")
     }
 
     val dataProps = asScalaSet(manager.getOntologies).foldLeft(Set[OWLDataProperty]()){
@@ -441,6 +467,7 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
     propertyClass       = getOWLClass("Property")
     componentClass      = getOWLClass("Component")
     entryPoint          = getOWLClass("Siris_Concept")
+    eventDescClass       = getOWLClass("EventDescription")
     sVarDescClass       = getOWLClass(descBbaseName)
     actionClass         = getOWLClass(actionIRI)
     functionClass       = getOWLClass(functionIRI)
@@ -451,10 +478,11 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
     dataTypeObjectProp  = objectProps.find( OWLFunctions.getName(_) equals hasDataType )
     forCompObjectProp   = objectProps.find( OWLFunctions.getName(_) equals forComponent )
     hasParameterProp    = objectProps.find( OWLFunctions.getName(_) equals hasParameter )
-    providesParameterProp = objectProps.find( OWLFunctions.getName(_) equals providesParameter )
-    requiresParameterProp = objectProps.find( OWLFunctions.getName(_) equals requiresParameter )
+    providesPropertyProp = objectProps.find( OWLFunctions.getName(_) equals providesProperty )
+    requiresPropertyProp = objectProps.find( OWLFunctions.getName(_) equals requiresProperty )
     describedByProp     = objectProps.find( OWLFunctions.getName(_) equals describedBy )
     describesProp       = objectProps.find( OWLFunctions.getName(_) equals describesProperty )
+    describesEventProp  = objectProps.find( OWLFunctions.getName(_) equals "describesEvent" )
     hasSubjectProp      = objectProps.find( OWLFunctions.getName(_) equals hasSubject )
     hasObjectProp       = objectProps.find( OWLFunctions.getName(_) equals hasObject )
     hasPredicateProp    = objectProps.find( OWLFunctions.getName(_) equals hasPredicate )
@@ -463,8 +491,10 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
     hasRoleProp         = objectProps.find( OWLFunctions.getName(_) equals hasRole )
     hasOperatorTypeProp = objectProps.find( OWLFunctions.getName(_) equals "hasOperatorType" )
     hasReturnValueProp  = objectProps.find( OWLFunctions.getName(_) equals "hasReturnValue" )
+    hasCreateParameterProp = objectProps.find( OWLFunctions.getName(_) equals "hasCreateParameter" )
     hasParameter1Prop   = objectProps.find( OWLFunctions.getName(_) equals "hasParameter1" )
     hasDefaultValueAnnotation = getAnnotationProperty("hasDefaultValue")
+    hasAnnotationAnnotation = getAnnotationProperty("hasAnnotation")
     commentAnnotation   = getAnnotationProperty("comment")
     overridesProvideAnnotation = getAnnotationProperty("overridesProvide")
 
@@ -489,6 +519,9 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
     case None => None
   }
 
+  def getLoadedOntology: OWLOntology =
+    ontology.get
+
   def getNullTypeClass : OWLIndividual =
     nullType.get
 
@@ -510,11 +543,17 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
   def getActionClass : OWLClass =
     actionClass.get
 
+  def getFunctionClass : OWLClass =
+    functionClass.get
+
   def getRelationClass : OWLClass =
     relationClass.get
 
   def getSVarDescriptionClass : OWLClass =
     sVarDescClass.get
+
+  def getEventDescriptionClass : OWLClass =
+    eventDescClass.get
 
   def getpropertyClass : OWLClass =
     propertyClass.get
@@ -555,17 +594,26 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
   def getHasParameterProp : OWLObjectProperty =
     hasParameterProp.get
 
-  def getProvidesParameterProp : OWLObjectProperty =
-    providesParameterProp.get
+  def getHasCreateParameterProp : OWLObjectProperty =
+    hasCreateParameterProp.get
 
-  def getRequiresParameterProp : OWLObjectProperty =
-    requiresParameterProp.get
+  def getProvidesPropertyProp : OWLObjectProperty =
+    providesPropertyProp.get
+
+  def getRequiresPropertyProp : OWLObjectProperty =
+    requiresPropertyProp.get
+
+  def getHasAnnotation : OWLAnnotationProperty =
+    hasAnnotationAnnotation.get
 
   def getDescribedByProp : OWLObjectProperty =
     describedByProp.get
 
   def getDescribesProp : OWLObjectProperty =
     describesProp.get
+
+  def getDescribesEventProp : OWLObjectProperty =
+    describesEventProp.get
 
   def getHasSubjectProp : OWLObjectProperty =
     hasSubjectProp.get
@@ -593,6 +641,9 @@ class OntoGenTwo(val coreDir : File, onlyForComponent : Option[String] = None) e
 
   def getOverridesProvide : OWLAnnotationProperty =
     overridesProvideAnnotation.get
+
+  def getObjectPropertyExpressions(i : OWLIndividual)(p : OWLObjectProperty) =
+    manager.getOntologies.flatMap(_.getObjectPropertyAssertionAxioms(i)).filter(_.getProperty == p)
 
   def getSuperClasses( of : OWLClass, recurse : Boolean = true ) : Set[OWLClassExpression] = {
     val direct = asScalaSet(of.getSuperClasses(manager.getOntologies)).toSet

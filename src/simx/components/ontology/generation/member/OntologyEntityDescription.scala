@@ -43,11 +43,12 @@ class OntologyEntityDescription(override val owlClass : OWLClass)(implicit o : O
   override def getSVarDescriptions = {
     o.getIndividuals(owlClass).
       flatMap(getDescribedClasses(_).filterNot(_ equals o.getEntityClass)).map(cls => {
-        new WritableForPackage {
+        new SVarDescriptionForPackage {
           def packageName: String = "simx.core"
           def toScalaCode: String =
             "object " + OWLFunctions.getName(cls) + " extends EntitySValDescription(Entity.valueDescription as Symbols." + deCap(OWLFunctions.getName(cls)) + ", " +
             "new simx.core.ontology.entities." + OWLFunctions.getName(cls) + "(_, _), \"" + cls.toStringID + "\")"
+          override val interpolatorCode: Option[String] = None
         }
       }).toList
   }
@@ -98,7 +99,7 @@ class OntologyEntityDescription(override val owlClass : OWLClass)(implicit o : O
           "extends EntityDescription " + tab("(", 2) +
           aspects.map{
             aspect =>
-              OWLFunctions.getName(aspect.name.get.asOWLClass()) + tab("(", 3) +
+              aspect.pkg + "." + aspect.aspectName + tab("(", 3) +
                 filteredParameters(aspect).map(p => p.name + " = " + p.name ).mkString(tab(",", 3)) + tab() + ")"
           }.mkString(tab(",")) +
           "\n)"

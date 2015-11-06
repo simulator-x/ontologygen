@@ -65,9 +65,10 @@ protected abstract class SimXRelation(expr : OWLProperty[_, _]) extends Writable
   def getName : String =
     OWLFunctions.getName(expr)
 
-  override def getSVarDescriptions = new WritableForPackage {
+  override def getSVarDescriptions = new SVarDescriptionForPackage {
     def packageName: String = "simx.core"
     def toScalaCode: String = toTypeString
+    override val interpolatorCode: Option[String] = None
   } :: Nil
 
   override def toString: String =

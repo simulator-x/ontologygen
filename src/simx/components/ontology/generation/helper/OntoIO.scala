@@ -54,15 +54,20 @@ trait OntoIO extends OntoDefinitions {
   protected val symbolsHeader = headerFrom("SymbolsHeader", "package simx.core.ontology", "\n\n\t")
   protected val entitiesHeader = headerFrom("EntitiesHeader", "package simx.core.ontology.entities")
   protected val descriptionHeader = headerFrom("EntityDescriptionsHeader", "package simx.core.ontology.entities")
-  protected val aspectsHeader = headerFrom("AspectsHeader", "package simx.core.ontology.aspects")
+  protected val aspectsHeader = headerFrom("AspectsHeader", "")
   protected val actionsHeader = headerFrom("ActionsHeader", "package simx.core.ontology.actions")
   protected val semtraitHeader = headerFrom("SemTraitsHeader", "package simx.core.ontology")
   protected def functionsHeader(packageName: String) = headerFrom(
     template = "FunctionsHeader",
     packageName = "package " + packageName + ".ontology.functions",
-    suffix = "\n\n" + "trait Functions{\n",
+    suffix = "\n\n" + "trait Functions {\n",
     additionalImports =
         if(packageName != "simx.core") "import " + packageName + ".ontology.types._" :: Nil else Nil
+  )
+  protected def interpolatorsHeader(packageName: String) = headerFrom(
+    template = "InterpolatorsHeader",
+    packageName = "package " + packageName + ".ontology.functions",
+    suffix = "\n\n" + "trait Interpolators {\n"
   )
   protected def typesHeader(packageName: String) = headerFrom(
     template = "TypesHeader",
