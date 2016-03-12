@@ -1,12 +1,12 @@
 libraryDependencies ++= Seq(
 	compilerPlugin("org.scala-lang.plugins" % ("scala-continuations-plugin_" + scalaVersion.value) % "1.0.2"),
-	"org.eclipse.jetty" % "jetty-server" % "9.2.11.v20150529",
+	"org.eclipse.jetty" % "jetty-server" % "9.2.15.v20160210",
 	"org.scala-lang" % "scala-library-all" % scalaVersion.value,
     "com.hermit-reasoner" % "org.semanticweb.hermit" % "1.3.8.4",
     "net.sourceforge.owlapi" % "owlapi-distribution" % "3.5.0",
-	"org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.3",
-	"org.apache.logging.log4j" % "log4j-api" % "2.3",
-	"org.apache.logging.log4j" % "log4j-core" % "2.3"
+	"org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.5",
+	"org.apache.logging.log4j" % "log4j-api" % "2.5",
+	"org.apache.logging.log4j" % "log4j-core" % "2.5"
 )
 
 scalaSource in Compile <<= baseDirectory(_ / "src")
